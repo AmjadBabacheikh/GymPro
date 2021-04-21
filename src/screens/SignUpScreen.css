@@ -1,0 +1,9 @@
+.btnLogin {
+  padding: 8px;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.btn-primary {
+  background-color: #005691;
+}

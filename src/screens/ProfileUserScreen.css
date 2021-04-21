@@ -1,0 +1,42 @@
+.info {
+  color: #004a7c;
+}
+
+.profile-img .file {
+  position: relative;
+  overflow: hidden;
+  margin-top: -30%;
+  width: 80%;
+  border: none;
+  border-radius: 0;
+  font-size: 15px;
+  background: #212529b8;
+}
+.profile-cv .file {
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+  width: 40%;
+  border: none;
+  border-radius: 0;
+  font-size: 15px;
+  background: #212529b8;
+}
+.profile-cv .file input {
+  position: absolute;
+  opacity: 0;
+  right: 0;
+  top: 0;
+}
+.profile-img .file input {
+  position: absolute;
+  opacity: 0;
+  right: 0;
+  top: 0;
+}
+@media (max-width: 844px) {
+  .profile-img img {
+    width: 80% !important;
+    height: 80% !important;
+  }
+}

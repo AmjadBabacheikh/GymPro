@@ -1,0 +1,13 @@
+.nav-color {
+  background-color: #1f3c88;
+}
+.navbar-light .navbar-nav .nav-link {
+  color: #fafafa;
+  margin-left: 20px;
+}
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:visited,
+.navbar-light .navbar-nav .nav-link:link,
+.navbar-light .navbar-nav .nav-link:active {
+  color: #e8f1f5;
+}
