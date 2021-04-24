@@ -60,9 +60,9 @@ const UpdateProfileUserScreen = ({ history }) => {
       setPhoneNumber(user.telephone);
       setDateNaissance(user.dateNaissance.slice(0, 10));
       setCin(user.cin);
-      if (user.genre == 'Homme') {
+      if (user.genre === 'Homme') {
         setMenCheked(true);
-      } else if (user.genre == 'Femme') {
+      } else if (user.genre === 'Femme') {
         setWomenCheked(true);
       }
     }

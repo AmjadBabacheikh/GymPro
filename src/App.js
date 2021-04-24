@@ -9,8 +9,9 @@ import SignUpScreen from './screens/SignUpScreen';
 import ProfileUserScreen from './screens/ProfileUserScreen';
 import UpdateProfileUserScreen from './screens/UpdateProfileUserScreen';
 import ClientsListScreen from './screens/ClientsListScreen';
+import CoachListScreen from './screens/CoachListScreen';
+import ResponsableListScreen from './screens/ResponsableListScreen';
 import './App.css';
-import EmployeListScreen from './screens/EmployeListScreen';
 const App = () => {
   return (
     <Router>
@@ -31,10 +32,10 @@ const App = () => {
             component={ClientsListScreen}
             exact
           />
-
+          <Route path='/admin/coachlist' component={CoachListScreen} exact />
           <Route
-            path='/admin/employelist'
-            component={EmployeListScreen}
+            path='/admin/responsablelist'
+            component={ResponsableListScreen}
             exact
           />
         </Container>

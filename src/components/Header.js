@@ -68,8 +68,11 @@ const Header = ({ history }) => {
                       <LinkContainer to='/admin/clientslist'>
                         <NavDropdown.Item>clients</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to='/admin/employelist'>
-                        <NavDropdown.Item>employes</NavDropdown.Item>
+                      <LinkContainer to='/admin/coachlist'>
+                        <NavDropdown.Item>coachs</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to='/admin/responsablelist'>
+                        <NavDropdown.Item>responsables</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to='/admin/logs'>
                         <NavDropdown.Item>logs</NavDropdown.Item>

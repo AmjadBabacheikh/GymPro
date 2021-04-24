@@ -14,19 +14,17 @@ import {
   getEmployes,
   deleteEmploye,
   addResponsable,
-  addCoach,
 } from '../actions/userActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 
-const EmployeListScreen = ({ history }) => {
+const ResponsableListScreen = ({ history }) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [CIN, setCin] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [dateNaissance, setDateNaissance] = useState();
   const [genre, setGenre] = useState();
@@ -38,16 +36,14 @@ const EmployeListScreen = ({ history }) => {
   const { Loading: LoadingDelete, successDelete, errorDelete } = employeDelete;
   const responsableAdd = useSelector((state) => state.responsableAdd);
   const { Loading: LoadingAdd, successAdd, errorAdd } = responsableAdd;
-  const coachAdd = useSelector((state) => state.coachAdd);
-  const {
-    Loading: LoadingAddCoach,
-    successAdd: successAddCoach,
-    errorAdd: errorAddCoach,
-  } = coachAdd;
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   useEffect(() => {
     if (userInfo && userInfo.user.role === 'admin') {
+      dispatch(getEmployes());
+    } else if (successAdd) {
+      handleClose();
       dispatch(getEmployes());
     } else {
       history.push('/signin');
@@ -61,51 +57,30 @@ const EmployeListScreen = ({ history }) => {
 
   const submitCreateHandler = (e) => {
     e.preventDefault();
-    if (status === 'Responsable') {
-      dispatch(
-        addResponsable(
-          CIN,
-          firstName,
-          lastName,
-          email,
-          dateNaissance,
-          genre,
-          phoneNumber
-        )
-      );
-      setCin('');
-      setEmail('');
-      setGenre('');
-      setLastName('');
-      setFirstName('');
-      setDateNaissance();
-      setShow(false);
-    } else if (status === 'Coach') {
-      dispatch(
-        addCoach(
-          CIN,
-          firstName,
-          lastName,
-          email,
-          dateNaissance,
-          genre,
-          phoneNumber
-        )
-      );
-      setCin('');
-      setEmail('');
-      setGenre('');
-      setLastName('');
-      setFirstName('');
-      setDateNaissance();
-      setShow(false);
-    }
+
+    dispatch(
+      addResponsable(
+        CIN,
+        firstName,
+        lastName,
+        email,
+        dateNaissance,
+        genre,
+        phoneNumber
+      )
+    );
+    setCin('');
+    setEmail('');
+    setGenre('');
+    setLastName('');
+    setFirstName('');
+    setDateNaissance();
   };
   return (
     <>
       <Row>
         <Col>
-          <h3 className='my-1 py-2'>Employes List </h3>
+          <h3 className='my-1 py-2'>Responsables List </h3>
         </Col>
         <Col>
           <Button
@@ -113,7 +88,7 @@ const EmployeListScreen = ({ history }) => {
             onClick={handleShow}
             style={{ float: 'right' }}
           >
-            Nouveau Emlpoye
+            Nouveau Responsable
           </Button>
         </Col>
       </Row>
@@ -133,34 +108,36 @@ const EmployeListScreen = ({ history }) => {
             </tr>
           </thead>
           <tbody>
-            {employes.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.profil.cin}</td>
-                <td>{`${user.profil.prenom} ${user.profil.nom}`}</td>
-                <td>{user.email}</td>
-                <td>
-                  <LinkContainer to={`/admin/user/${user.id}/edit`}>
-                    <Button variant='light' className='btn-sm'>
-                      <i className='fas fa-edit'></i>
-                    </Button>
-                  </LinkContainer>
+            {employes
+              .filter((user) => user.role === 'responsable')
+              .map((user) => (
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.profil.cin}</td>
+                  <td>{`${user.profil.prenom} ${user.profil.nom}`}</td>
+                  <td>{user.email}</td>
+                  <td>
+                    <LinkContainer to={`/admin/user/${user.id}/edit`}>
+                      <Button variant='light' className='btn-sm'>
+                        <i className='fas fa-edit'></i>
+                      </Button>
+                    </LinkContainer>
 
-                  <Button
-                    variant='danger'
-                    className='btn-sm'
-                    onClick={() => deleteEmployeHandler(user.id)}
-                    style={{ marginLeft: '30px' }}
-                  >
-                    <i className='fas fa-trash'></i>
-                  </Button>
-                </td>
-              </tr>
-            ))}
+                    <Button
+                      variant='danger'
+                      className='btn-sm'
+                      onClick={() => deleteEmployeHandler(user.id)}
+                      style={{ marginLeft: '30px' }}
+                    >
+                      <i className='fas fa-trash'></i>
+                    </Button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
           <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>Edit Password</Modal.Title>
+              <Modal.Title>Add Responsable</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {/* {message && <Message variant='danger'>{message}</Message>} */}
@@ -214,17 +191,6 @@ const EmployeListScreen = ({ history }) => {
                       setEmail(e.target.value);
                     }}
                   />
-                </Form.Group>
-                <Form.Group controlId='status'>
-                  <Form.Label>Status</Form.Label>
-                  <Form.Control
-                    as='select'
-                    defaultValue='Choose...'
-                    onChange={(e) => setStatus(e.target.value)}
-                  >
-                    <option value='Responsable '>Responsable </option>
-                    <option value='Coach '>Coach</option>
-                  </Form.Control>
                 </Form.Group>
                 <Form.Group controlId='phoneNumber'>
                   <Form.Label>Your phone number</Form.Label>
@@ -292,4 +258,4 @@ const EmployeListScreen = ({ history }) => {
   );
 };
 
-export default EmployeListScreen;
+export default ResponsableListScreen;
