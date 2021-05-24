@@ -11,14 +11,15 @@ import {
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import {
-  getEmployes,
+  getResponsables,
   deleteEmploye,
   addResponsable,
 } from '../actions/userActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+import Paginate from '../components/Paginate';
 
-const ResponsableListScreen = ({ history }) => {
+const ResponsableListScreen = ({ history, match }) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [CIN, setCin] = useState('');
@@ -28,27 +29,34 @@ const ResponsableListScreen = ({ history }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [dateNaissance, setDateNaissance] = useState();
   const [genre, setGenre] = useState();
-  const emoloyesList = useSelector((state) => state.emoloyesList);
-  const { Loading, employes, error } = emoloyesList;
+  const responsablesList = useSelector((state) => state.responsablesList);
+  const {
+    Loading,
+    responsables,
+    error,
+    totalPages,
+    itemsCountPerPage,
+    totalItemsCount,
+  } = responsablesList;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const employeDelete = useSelector((state) => state.employeDelete);
   const { Loading: LoadingDelete, successDelete, errorDelete } = employeDelete;
   const responsableAdd = useSelector((state) => state.responsableAdd);
   const { Loading: LoadingAdd, successAdd, errorAdd } = responsableAdd;
-
+  const pageNumber = match.params.pageNumber || 0;
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   useEffect(() => {
     if (userInfo && userInfo.user.role === 'admin') {
-      dispatch(getEmployes());
+      dispatch(getResponsables(parseInt(pageNumber)));
     } else if (successAdd) {
-      handleClose();
-      dispatch(getEmployes());
+      setShow(false);
+      dispatch(getResponsables(parseInt(pageNumber)));
     } else {
       history.push('/signin');
     }
-  }, [dispatch, history, successDelete, userInfo]);
+  }, [dispatch, history, successDelete, userInfo, successAdd, pageNumber]);
   const deleteEmployeHandler = (id) => {
     if (window.confirm('are you sure')) {
       dispatch(deleteEmploye(id));
@@ -75,9 +83,10 @@ const ResponsableListScreen = ({ history }) => {
     setLastName('');
     setFirstName('');
     setDateNaissance();
+    setPhoneNumber('');
   };
   return (
-    <>
+    <Container>
       <Row>
         <Col>
           <h3 className='my-1 py-2'>Responsables List </h3>
@@ -104,36 +113,49 @@ const ResponsableListScreen = ({ history }) => {
               <th>CIN</th>
               <th> Name</th>
               <th>EMAIL</th>
-              <th></th>
+              <th>ACTIVITY</th>
             </tr>
           </thead>
           <tbody>
-            {employes
-              .filter((user) => user.role === 'responsable')
-              .map((user) => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>{user.profil.cin}</td>
-                  <td>{`${user.profil.prenom} ${user.profil.nom}`}</td>
-                  <td>{user.email}</td>
-                  <td>
-                    <LinkContainer to={`/admin/user/${user.id}/edit`}>
-                      <Button variant='light' className='btn-sm'>
-                        <i className='fas fa-edit'></i>
-                      </Button>
-                    </LinkContainer>
+            {responsables.map((user) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.profil.cin}</td>
+                <td>{`${user.profil.prenom} ${user.profil.nom}`}</td>
+                <td>{user.email}</td>
 
+                <td>
+                  {/* <LinkContainer to={`/admin/user/${user.id}/edit`}>
+                    <Button variant='light' className='btn-sm'>
+                      <i className="fas fa-eye"></i>
+                    </Button>
+                  </LinkContainer> */}
+
+                  {!user.banned ? (
                     <Button
                       variant='danger'
-                      className='btn-sm'
+                      className='btn-sm mx-4'
                       onClick={() => deleteEmployeHandler(user.id)}
-                      style={{ marginLeft: '30px' }}
                     >
-                      <i className='fas fa-trash'></i>
+                      <i className='fas fa-user-minus'></i>
                     </Button>
-                  </td>
-                </tr>
-              ))}
+                  ) : (
+                    <Button
+                      variant='success'
+                      className='btn-sm mx-4'
+                      onClick={() => deleteEmployeHandler(user.id)}
+                    >
+                      <i class='fas fa-user-plus'></i>
+                    </Button>
+                  )}
+                  <LinkContainer to={`/admin/employe/${user.id}/edit`}>
+                    <Button variant='primary' className='btn-sm'>
+                      <i className='fas fa-eye'></i>
+                    </Button>
+                  </LinkContainer>
+                </td>
+              </tr>
+            ))}
           </tbody>
           <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
@@ -254,7 +276,13 @@ const ResponsableListScreen = ({ history }) => {
           </Modal>
         </Table>
       )}
-    </>
+      <Paginate
+        page={totalItemsCount}
+        pages={totalPages}
+        isAdmin={true}
+        list='responsablelist'
+      />
+    </Container>
   );
 };
 

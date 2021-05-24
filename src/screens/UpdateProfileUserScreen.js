@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Col, Row, Button, Modal } from 'react-bootstrap';
+import { Form, Col, Row, Button, Modal, Container } from 'react-bootstrap';
 import {
   updateProfile,
   getMyProfile,
@@ -95,7 +95,7 @@ const UpdateProfileUserScreen = ({ history }) => {
     }
   };
   return (
-    <Row>
+    <Container>
       <Col md={6} className='my-3 px-3'>
         <h2>Edit Profile</h2>
         {success && (
@@ -243,7 +243,7 @@ const UpdateProfileUserScreen = ({ history }) => {
           </Form>
         )}
       </Col>
-    </Row>
+    </Container>
   );
 };
 

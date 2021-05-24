@@ -11,10 +11,14 @@ import {
   USER_PROFILE_SUCCESS,
   USER_PROFILE_FAIL,
   USER_PROFILE_RESET,
-  EMPLOYES_LIST_REQUEST,
-  EMPLOYES_LIST_SUCCESS,
-  EMPLOYES_LIST_FAIL,
-  EMPLOYES_LIST_RESET,
+  COACH_LIST_REQUEST,
+  COACH_LIST_SUCCESS,
+  COACH_LIST_FAIL,
+  COACH_LIST_RESET,
+  RESPONSABLE_LIST_REQUEST,
+  RESPONSABLE_LIST_SUCCESS,
+  RESPONSABLE_LIST_FAIL,
+  RESPONSABLE_LIST_RESET,
   CLIENTS_LIST_SUCCESS,
   CLIENTS_LIST_REQUEST,
   CLIENTS_LIST_FAIL,
@@ -57,6 +61,13 @@ import {
   DELETE_USER_IMAGE_REQUEST,
   DELETE_USER_IMAGE_SUCCESS,
   DELETE_USER_IMAGE_FAIL,
+  CREATE_CART_REQUEST,
+  CREATE_CART_SUCCESS,
+  CREATE_CART_FAIL,
+  GET_CART_REQUEST,
+  GET_CART_SUCCESS,
+  GET_CART_FAIL,
+  CREATE_CART_RESET,
 } from '../constants/userConstants';
 
 export const loginReducer = (state = {}, action) => {
@@ -126,16 +137,47 @@ export const userProfileReducer = (state = { user: {} }, action) => {
   }
 };
 
-export const emoloyesListReducer = (state = { employes: [] }, action) => {
+export const responsablesListReducer = (
+  state = { responsables: [] },
+  action
+) => {
   const { type, payload } = action;
   switch (type) {
-    case EMPLOYES_LIST_REQUEST:
+    case RESPONSABLE_LIST_REQUEST:
       return { Loading: true };
-    case EMPLOYES_LIST_SUCCESS:
-      return { Loading: false, employes: payload.content };
-    case EMPLOYES_LIST_FAIL:
+    case RESPONSABLE_LIST_SUCCESS:
+      return {
+        Loading: false,
+        responsables: payload.content,
+        itemsCountPerPage: payload.size,
+        totalPages: payload.totalPages,
+        totalElements: payload.totalElements,
+      };
+    case RESPONSABLE_LIST_FAIL:
       return { Loading: false, error: payload };
-    case EMPLOYES_LIST_RESET:
+    case RESPONSABLE_LIST_RESET:
+      return { users: [] };
+    default:
+      return state;
+  }
+};
+
+export const coachsListReducer = (state = { coachs: [] }, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case COACH_LIST_REQUEST:
+      return { Loading: true };
+    case COACH_LIST_SUCCESS:
+      return {
+        Loading: false,
+        coachs: payload.content,
+        itemsCountPerPage: payload.size,
+        totalPages: payload.totalPages,
+        totalElements: payload.totalElements,
+      };
+    case COACH_LIST_FAIL:
+      return { Loading: false, error: payload };
+    case COACH_LIST_RESET:
       return { users: [] };
     default:
       return state;
@@ -148,7 +190,13 @@ export const clientsListReducer = (state = { clients: [] }, action) => {
     case CLIENTS_LIST_REQUEST:
       return { Loading: true };
     case CLIENTS_LIST_SUCCESS:
-      return { Loading: false, clients: payload.content };
+      return {
+        Loading: false,
+        clients: payload.content,
+        itemsCountPerPage: payload.size,
+        totalPages: payload.totalPages,
+        totalElements: payload.totalElements,
+      };
     case CLIENTS_LIST_FAIL:
       return { Loading: false, error: payload };
     case CLIENTS_LIST_RESET:
@@ -303,6 +351,36 @@ export const userImageReducer = (state = {}, action) => {
       return { Loading: false, error: payload };
     case GET_USER_IMAGE_RESET:
       return { image: {} };
+    default:
+      return state;
+  }
+};
+
+export const cartReducer = (state = { cart: {} }, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case GET_CART_REQUEST:
+      return { Loading: true };
+    case GET_CART_SUCCESS:
+      return { Loading: false, cart: payload };
+    case GET_CART_FAIL:
+      return { Loading: false, error: payload };
+    default:
+      return state;
+  }
+};
+
+export const addCartReducer = (state = {}, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case CREATE_CART_REQUEST:
+      return { Loading: true };
+    case CREATE_CART_SUCCESS:
+      return { Loading: false, success: true };
+    case CREATE_CART_FAIL:
+      return { Loading: false, error: payload };
+    case CREATE_CART_RESET:
+      return {};
     default:
       return state;
   }

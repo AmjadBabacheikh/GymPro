@@ -5,7 +5,7 @@ import {
   loginReducer,
   registerReducer,
   userProfileReducer,
-  emoloyesListReducer,
+  responsablesListReducer,
   clientsListReducer,
   clientInfosReducer,
   employeInfosReducer,
@@ -18,8 +18,20 @@ import {
   responsableAddReducer,
   userImageReducer,
   userDeleteImageReducer,
+  coachsListReducer,
+  addCartReducer,
+  cartReducer,
 } from './reducers/userReducers';
-import { coursListReducer } from './reducers/coursReducers.js';
+import {
+  coursListReducer,
+  serviceDetailReducer,
+  servicesListReducer,
+  courseAddReducer,
+} from './reducers/coursReducers.js';
+import {
+  abonnementAddReducer,
+  couponAddReducer,
+} from './reducers/responsableReducer.js';
 
 const userLoginFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))
@@ -28,7 +40,6 @@ const reducer = combineReducers({
   userLogin: loginReducer,
   userRegister: registerReducer,
   userProfile: userProfileReducer,
-  emoloyesList: emoloyesListReducer,
   clientsList: clientsListReducer,
   clientInfos: clientInfosReducer,
   employeInfos: employeInfosReducer,
@@ -42,6 +53,15 @@ const reducer = combineReducers({
   responsableAdd: responsableAddReducer,
   userImage: userImageReducer,
   userDeleteImage: userDeleteImageReducer,
+  abonnementAdd: abonnementAddReducer,
+  serviceDetail: serviceDetailReducer,
+  servicesList: servicesListReducer,
+  responsablesList: responsablesListReducer,
+  coachsList: coachsListReducer,
+  courseAdd: courseAddReducer,
+  addCart: addCartReducer,
+  userCart: cartReducer,
+  couponAdd: couponAddReducer,
 });
 const initialState = {
   userLogin: {

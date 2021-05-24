@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Col, Row, Button, ListGroup } from 'react-bootstrap';
-import { getMyProfile, getMyImage } from '../actions/userActions';
+import { Form, Col, Row, Button, ListGroup, Container } from 'react-bootstrap';
+import {
+  getMyProfile,
+  getMyImage,
+  deleteMyImage,
+} from '../actions/userActions';
 import { LinkContainer } from 'react-router-bootstrap';
 import Message from '../components/Loader';
 import Loader from '../components/Loader';
@@ -33,28 +37,28 @@ const ProfileUserScreen = ({ history }) => {
   }, [dispatch, history]);
 
   const uploadImageHandler = async (e) => {
-    // const file = e.target.files[0];
-    // const formData = new FormData();
-    // formData.append('file', file);
-    // setUploadingImage(true);
-    // try {
-    //   const config = {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //       Authorization: `${userInfo.jwt}`,
-    //     },
-    //   };
-    //   await axios.post('/api/CANDIDAT/pdp', formData, config);
-    //   setUploadingImage(false);
-    //   dispatch(getMyImage());
-    // } catch (error) {
-    //   console.error(error);
-    //   setUploadingImage(false);
-    // }
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    setUploadingImage(true);
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `${userInfo.jwt}`,
+        },
+      };
+      await axios.post('/api/user/image', formData, config);
+      setUploadingImage(false);
+      dispatch(getMyImage());
+    } catch (error) {
+      console.error(error);
+      setUploadingImage(false);
+    }
   };
 
   return (
-    <>
+    <Container>
       <LinkContainer to='/editProfile' style={{ float: 'right' }}>
         <Button variant='secondary' className='my-3'>
           Edit Profile
@@ -69,9 +73,20 @@ const ProfileUserScreen = ({ history }) => {
               <>
                 <img
                   alt={user.firstName}
-                  style={{ width: '80%', height: '80%' }}
+                  style={{ width: '80%', height: '60%' }}
                   src={image}
                 />
+                <div className='delete_btn'>
+                  <i
+                    className='fas fa-trash-alt'
+                    onClick={() => {
+                      if (window.confirm('are you sure')) {
+                        dispatch(deleteMyImage());
+                        dispatch(getMyImage());
+                      }
+                    }}
+                  ></i>
+                </div>
                 <div className='file btn btn-lg btn-primary'>
                   Change Photo
                   <input
@@ -89,6 +104,7 @@ const ProfileUserScreen = ({ history }) => {
                   style={{ width: '80%', height: '70%' }}
                   src={unknown}
                 />
+
                 <div className='file btn btn-lg btn-primary'>
                   Change Photo
                   <input
@@ -158,7 +174,7 @@ const ProfileUserScreen = ({ history }) => {
           </Col>
         </Row>
       )}
-    </>
+    </Container>
   );
 };
 

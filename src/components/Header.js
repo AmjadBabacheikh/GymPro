@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap';
 import { Redirect, Route } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
-import { logout, getMyProfile } from '../actions/userActions';
+import { logout } from '../actions/userActions';
 import './Header.css';
 import logo from '../images/logo.png';
 
@@ -18,8 +18,6 @@ const Header = ({ history }) => {
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { Loading, error, userInfo } = userLogin;
-  const userProfile = useSelector((state) => state.userProfile);
-  const { Loading: LoadingProfile, user, error: errorProfile } = userProfile;
 
   const isEmpty = function (obj) {
     for (var key in obj) {
@@ -27,9 +25,6 @@ const Header = ({ history }) => {
     }
     return true;
   };
-  useEffect(() => {
-    dispatch(getMyProfile());
-  }, [dispatch]);
   return (
     <header>
       <Navbar className='nav-color' expand='lg'>
@@ -52,53 +47,61 @@ const Header = ({ history }) => {
               <LinkContainer to='/about'>
                 <Nav.Link className='nav-link'>ABOUT</Nav.Link>
               </LinkContainer>
+              {userInfo && userInfo.user.role === 'admin' ? (
+                <NavDropdown title='ADMIN' id='admin'>
+                  <LinkContainer to='/admin'>
+                    <NavDropdown.Item>dashboard</NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
+              ) : null}
+              {userInfo && userInfo.user.role === 'responsable' ? (
+                <NavDropdown title='RESPONSABLE' id='responsable'>
+                  <LinkContainer to='/responsable'>
+                    <NavDropdown.Item>dashboard</NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
+              ) : null}
 
               {userInfo ? (
-                <NavDropdown
-                  title={`${
-                    !isEmpty(userInfo) &&
-                    userInfo.user.profil.prenom.toUpperCase()
-                  } ${
-                    !isEmpty(userInfo) && userInfo.user.profil.nom.toUpperCase()
-                  }`}
-                  id='username'
-                >
-                  {userInfo && userInfo.user.role === 'admin' ? (
-                    <>
-                      <LinkContainer to='/admin/clientslist'>
-                        <NavDropdown.Item>clients</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to='/admin/coachlist'>
-                        <NavDropdown.Item>coachs</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to='/admin/responsablelist'>
-                        <NavDropdown.Item>responsables</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to='/admin/logs'>
-                        <NavDropdown.Item>logs</NavDropdown.Item>
-                      </LinkContainer>
-                    </>
-                  ) : null}
-                  <LinkContainer to='/profile'>
-                    <NavDropdown.Item>profile</NavDropdown.Item>
+                <>
+                  <LinkContainer to='/cart'>
+                    <Nav.Link>
+                      <i className='fas fa-shopping-cart'></i> Cart
+                    </Nav.Link>
                   </LinkContainer>
-                  <Route
-                    render={({ history }) => (
-                      <NavDropdown.Item
-                        history={history}
-                        onClick={() => {
-                          dispatch(logout());
-                          history.push('/');
-                        }}
-                      >
-                        logout
-                      </NavDropdown.Item>
-                    )}
-                  />
-                </NavDropdown>
+                  <NavDropdown
+                    title={`${
+                      !isEmpty(userInfo) &&
+                      userInfo.user.profil.prenom.toUpperCase()
+                    } ${
+                      !isEmpty(userInfo) &&
+                      userInfo.user.profil.nom.toUpperCase()
+                    }`}
+                    id='username'
+                  >
+                    <LinkContainer to='/profile'>
+                      <NavDropdown.Item>profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <Route
+                      render={({ history }) => (
+                        <NavDropdown.Item
+                          history={history}
+                          onClick={() => {
+                            dispatch(logout());
+                            history.push('/');
+                          }}
+                        >
+                          logout
+                        </NavDropdown.Item>
+                      )}
+                    />
+                  </NavDropdown>
+                </>
               ) : (
                 <LinkContainer to='/signin'>
-                  <Nav.Link className='nav-link'>CONNEXION</Nav.Link>
+                  <Nav.Link className='nav-link'>
+                    <i className='fas fa-user'></i> CONNEXION
+                  </Nav.Link>
                 </LinkContainer>
               )}
             </Nav>

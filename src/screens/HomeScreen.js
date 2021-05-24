@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Container, Col, Row, Image, Button } from 'react-bootstrap';
-import homeImage from '../images/8225.jpg';
+import ServicesCarousel from '../components/ServicesCarousel';
 import './HomeScreen.css';
 
 const HomeScreen = ({ history }) => {
@@ -22,7 +22,11 @@ const HomeScreen = ({ history }) => {
           </h1>
         </Col>
         <Col md={7} lg={5} xs={12}>
-          <Image className='homeContainer' src={homeImage} alt='home image' />
+          <Image
+            className='homeContainer'
+            src={'./images/8225-min.jpg'}
+            alt='home image'
+          />
         </Col>
       </Row>
       <Row>
@@ -37,6 +41,7 @@ const HomeScreen = ({ history }) => {
           </div>
         </Col>
       </Row>
+      <ServicesCarousel />
     </Container>
   );
 };

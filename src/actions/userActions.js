@@ -12,9 +12,12 @@ import {
   USER_PROFILE_SUCCESS,
   USER_PROFILE_FAIL,
   USER_PROFILE_RESET,
-  EMPLOYES_LIST_REQUEST,
-  EMPLOYES_LIST_SUCCESS,
-  EMPLOYES_LIST_FAIL,
+  COACH_LIST_REQUEST,
+  COACH_LIST_SUCCESS,
+  COACH_LIST_FAIL,
+  RESPONSABLE_LIST_REQUEST,
+  RESPONSABLE_LIST_SUCCESS,
+  RESPONSABLE_LIST_FAIL,
   CLIENTS_LIST_SUCCESS,
   CLIENTS_LIST_REQUEST,
   CLIENTS_LIST_FAIL,
@@ -42,15 +45,21 @@ import {
   ADD_COACH_REQUEST,
   ADD_COACH_SUCCESS,
   ADD_COACH_FAIL,
-  ADD_CLIENT_REQUEST,
-  ADD_CLIENT_SUCCESS,
-  ADD_CLIENT_FAIL,
   GET_USER_IMAGE_REQUEST,
   GET_USER_IMAGE_SUCCESS,
   GET_USER_IMAGE_FAIL,
   DELETE_USER_IMAGE_REQUEST,
   DELETE_USER_IMAGE_SUCCESS,
   DELETE_USER_IMAGE_FAIL,
+  ADD_CLIENT_REQUEST,
+  ADD_CLIENT_SUCCESS,
+  ADD_CLIENT_FAIL,
+  CREATE_CART_REQUEST,
+  CREATE_CART_SUCCESS,
+  CREATE_CART_FAIL,
+  GET_CART_REQUEST,
+  GET_CART_SUCCESS,
+  GET_CART_FAIL,
 } from '../constants/userConstants';
 
 export const login = (email, password) => async (dispatch) => {
@@ -81,52 +90,58 @@ export const login = (email, password) => async (dispatch) => {
   }
 };
 
-export const register = (
-  CIN,
-  email,
-  password,
-  firstName,
-  lastName,
-  phoneNumber,
-  dateNaissance,
-  genre
-) => async (dispatch) => {
-  try {
-    dispatch({
-      type: USER_REGISTER_REQUEST,
-    });
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    const { data } = await axios.post(
-      '/api/register',
-      {
-        cin: CIN,
-        email,
-        password,
-        prenom: firstName,
-        nom: lastName,
-        telephone: phoneNumber,
-        dateNaissance,
-        genre,
-      },
-      config
-    );
-    dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
-    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-    localStorage.setItem('userInfo', JSON.stringify(data));
-  } catch (error) {
-    dispatch({
-      type: USER_REGISTER_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+export const register =
+  (
+    CIN,
+    email,
+    password,
+    firstName,
+    genre,
+    dateNaissance,
+    lastName,
+    phoneNumber
+  ) =>
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: USER_REGISTER_REQUEST,
+      });
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      const { data } = await axios.post(
+        '/api/register',
+
+        {
+          email,
+          password,
+          profil: {
+            nom: lastName,
+            prenom: firstName,
+            cin: CIN,
+            dateNaissance,
+            genre,
+            telephone: phoneNumber,
+          },
+        },
+
+        config
+      );
+      dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
+      dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+      localStorage.setItem('userInfo', JSON.stringify(data));
+    } catch (error) {
+      dispatch({
+        type: USER_REGISTER_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const getMyProfile = () => async (dispatch, getState) => {
   try {
@@ -155,10 +170,10 @@ export const getMyProfile = () => async (dispatch, getState) => {
   }
 };
 
-export const getEmployes = () => async (dispatch, getState) => {
+export const getResponsables = (pageNo) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: EMPLOYES_LIST_REQUEST,
+      type: RESPONSABLE_LIST_REQUEST,
     });
     const {
       userLogin: { userInfo },
@@ -169,11 +184,44 @@ export const getEmployes = () => async (dispatch, getState) => {
         Authorization: `${userInfo.jwt}`,
       },
     };
-    const { data } = await axios.get(`/api/admin/employes`, config);
-    dispatch({ type: EMPLOYES_LIST_SUCCESS, payload: data });
+    const { data } = await axios.get(
+      `/api/admin/responsables?pageNo=${pageNo}&pageSize=${2}`,
+      config
+    );
+    dispatch({ type: RESPONSABLE_LIST_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
-      type: EMPLOYES_LIST_FAIL,
+      type: RESPONSABLE_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getCoachs = (pageNo) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: COACH_LIST_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    const { data } = await axios.get(
+      `/api/admin/coachs?pageNo=${pageNo}&pageSize=${2}`,
+      config
+    );
+    dispatch({ type: COACH_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: COACH_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
@@ -209,7 +257,7 @@ export const getEmploye = (id) => async (dispatch, getState) => {
   }
 };
 
-export const getClients = () => async (dispatch, getState) => {
+export const getClients = (pageNo) => async (dispatch, getState) => {
   try {
     dispatch({
       type: CLIENTS_LIST_REQUEST,
@@ -223,7 +271,10 @@ export const getClients = () => async (dispatch, getState) => {
         Authorization: `${userInfo.jwt}`,
       },
     };
-    const { data } = await axios.get(`/api/admin/clients`, config);
+    const { data } = await axios.get(
+      `/api/admin/clients?pageNo=${pageNo}&pageSize=${2}`,
+      config
+    );
     dispatch({ type: CLIENTS_LIST_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -316,50 +367,45 @@ export const deleteClient = (id) => async (dispatch, getState) => {
   }
 };
 
-export const updateProfile = (
-  firstName,
-  lastName,
-  phoneNumber,
-  dateNaissance,
-  genre,
-  cin
-) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: USER_UPDATE_PROFILE_REQUEST,
-    });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `${userInfo.jwt}`,
-      },
-    };
-    const { data } = await axios.put(
-      `/api/user/profil`,
-      {
-        prenom: firstName,
-        nom: lastName,
-        telephone: phoneNumber,
-        dateNaissance,
-        genre,
-        cin,
-      },
-      config
-    );
-    dispatch({ type: USER_UPDATE_PROFILE_SUCCESS, payload: data });
-  } catch (error) {
-    dispatch({
-      type: USER_UPDATE_PROFILE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+export const updateProfile =
+  (firstName, lastName, phoneNumber, dateNaissance, genre, cin) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_UPDATE_PROFILE_REQUEST,
+      });
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${userInfo.jwt}`,
+        },
+      };
+      const { data } = await axios.put(
+        `/api/user/profil`,
+        {
+          prenom: firstName,
+          nom: lastName,
+          telephone: phoneNumber,
+          dateNaissance,
+          genre,
+          cin,
+        },
+        config
+      );
+      dispatch({ type: USER_UPDATE_PROFILE_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: USER_UPDATE_PROFILE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 export const updatePassword = (password) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -393,148 +439,134 @@ export const updatePassword = (password) => async (dispatch, getState) => {
   }
 };
 
-export const addResponsable = (
-  CIN,
-  firstName,
-  lastName,
-  email,
-  dateNaissance,
-  genre,
-  phoneNumber
-) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: ADD_RESPONSABLE_REQUEST,
-    });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `${userInfo.jwt}`,
-      },
-    };
-    await axios.post(
-      '/api/admin/responsable',
-      {
-        cin: CIN,
-        email,
-        prenom: firstName,
-        nom: lastName,
-        telephone: phoneNumber,
-        dateNaissance,
-        genre,
-      },
-      config
-    );
-    dispatch({ type: ADD_RESPONSABLE_SUCCESS });
-  } catch (error) {
-    dispatch({
-      type: ADD_RESPONSABLE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+export const addResponsable =
+  (CIN, firstName, lastName, email, dateNaissance, genre, phoneNumber) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ADD_RESPONSABLE_REQUEST,
+      });
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${userInfo.jwt}`,
+        },
+      };
+      await axios.post(
+        '/api/admin/responsable',
+        {
+          email,
+          profil: {
+            cin: CIN,
+            prenom: firstName,
+            nom: lastName,
+            telephone: phoneNumber,
+            dateNaissance,
+            genre,
+          },
+        },
+        config
+      );
+      dispatch({ type: ADD_RESPONSABLE_SUCCESS });
+    } catch (error) {
+      dispatch({
+        type: ADD_RESPONSABLE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
-export const addCoach = (
-  CIN,
-  firstName,
-  lastName,
-  email,
-  dateNaissance,
-  genre,
-  phoneNumber
-) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: ADD_COACH_REQUEST,
-    });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `${userInfo.jwt}`,
-      },
-    };
-    await axios.post(
-      '/api/admin/coach',
-      {
-        cin: CIN,
-        email,
-        prenom: firstName,
-        nom: lastName,
-        telephone: phoneNumber,
-        dateNaissance,
-        genre,
-      },
-      config
-    );
-    dispatch({ type: ADD_COACH_SUCCESS });
-  } catch (error) {
-    dispatch({
-      type: ADD_COACH_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+export const addCoach =
+  (CIN, firstName, lastName, email, dateNaissance, genre, phoneNumber) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ADD_COACH_REQUEST,
+      });
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${userInfo.jwt}`,
+        },
+      };
+      await axios.post(
+        '/api/admin/coach',
+        {
+          email,
+          profil: {
+            cin: CIN,
+            prenom: firstName,
+            nom: lastName,
+            telephone: phoneNumber,
+            dateNaissance,
+            genre,
+          },
+        },
+        config
+      );
+      dispatch({ type: ADD_COACH_SUCCESS });
+    } catch (error) {
+      dispatch({
+        type: ADD_COACH_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
-export const addClient = (
-  CIN,
-  email,
-  password,
-  firstName,
-  lastName,
-  phoneNumber,
-  dateNaissance,
-  genre
-) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: ADD_CLIENT_REQUEST,
-    });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `${userInfo.jwt}`,
-      },
-    };
-    await axios.post(
-      '/api/responsable/clients',
-      {
-        cin: CIN,
-        email,
-        password,
-        prenom: firstName,
-        nom: lastName,
-        telephone: phoneNumber,
-        dateNaissance,
-        genre,
-      },
-      config
-    );
-    dispatch({ type: ADD_CLIENT_SUCCESS });
-  } catch (error) {
-    dispatch({
-      type: ADD_CLIENT_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+export const addClient =
+  (CIN, email, firstName, genre, dateNaissance, lastName, phoneNumber) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ADD_CLIENT_REQUEST,
+      });
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${userInfo.jwt}`,
+        },
+      };
+      await axios.post(
+        '/api/responsable/clients',
+        {
+          email,
+          profil: {
+            cin: CIN,
+            prenom: firstName,
+            nom: lastName,
+            telephone: phoneNumber,
+            dateNaissance,
+            genre,
+          },
+        },
+        config
+      );
+      dispatch({ type: ADD_CLIENT_SUCCESS });
+    } catch (error) {
+      dispatch({
+        type: ADD_CLIENT_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const getMyImage = () => async (dispatch, getState) => {
   try {
@@ -599,4 +631,58 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_REGISTER_RESET });
   dispatch({ type: USER_PROFILE_RESET });
+};
+
+export const createCart = (services) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: CREATE_CART_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    await axios.post('/api/client/cart', { services }, config);
+    dispatch({ type: CREATE_CART_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: CREATE_CART_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getCart = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: GET_CART_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    const { data } = await axios.get('/api/client/cart', config);
+    dispatch({ type: GET_CART_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: GET_CART_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
 };
