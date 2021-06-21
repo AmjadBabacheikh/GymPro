@@ -129,7 +129,7 @@ const CoachListScreen = ({ history, match }) => {
                       <i className='fas fa-edit'></i>
                     </Button>
                   </LinkContainer> */}
-                  {!user.banned ? (
+                  {!user.isBanned ? (
                     <Button
                       variant='danger'
                       className='btn-sm mx-3'
@@ -146,7 +146,7 @@ const CoachListScreen = ({ history, match }) => {
                       <i class='fas fa-user-plus'></i>
                     </Button>
                   )}
-                  <LinkContainer to={`/admin/employe/${user.id}/edit`}>
+                  <LinkContainer to={`/admin/employe/${user.id}`}>
                     <Button variant='primary' className='btn-sm'>
                       <i className='fas fa-eye'></i>
                     </Button>
@@ -282,6 +282,7 @@ const CoachListScreen = ({ history, match }) => {
         pages={totalPages}
         isAdmin={true}
         list='coachlist'
+        role='admin'
       />
     </Container>
   );

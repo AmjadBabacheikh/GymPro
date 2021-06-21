@@ -5,7 +5,8 @@ import SideBar from '../components/SideBar';
 import AddAbonnementScreen from './AddAbonnementScreen';
 import AddClientScreen from './AddClientScreen';
 import AddCourseScreen from './AddCourseScreen';
-import AddCouponScreen from './AddCouponScreen';
+import CouponsListScreen from './CouponsListScreen';
+import AddSeanceScreen from './AddSeanceScreen';
 import '../components/SideBar.css';
 const links = [
   {
@@ -22,7 +23,11 @@ const links = [
   },
   {
     title: 'Coupons',
-    route: '/responsable/coupon',
+    route: '/responsable/couponlist',
+  },
+  {
+    title: 'Creer Seance',
+    route: '/responsable/seance',
   },
 ];
 const ResponableDashboard = (props) => {
@@ -39,6 +44,7 @@ const ResponableDashboard = (props) => {
               component={AddClientScreen}
               exact
             />
+            <Route path='/responsable' component={AddClientScreen} exact />
             <Route
               path='/responsable/abonnement'
               component={AddAbonnementScreen}
@@ -47,6 +53,21 @@ const ResponableDashboard = (props) => {
             <Route
               path='/responsable/course'
               component={AddCourseScreen}
+              exact
+            />
+            <Route
+              path='/responsable/couponlist'
+              component={CouponsListScreen}
+              exact
+            />
+            <Route
+              path='/responsable/couponlist/:pageNumber'
+              component={CouponsListScreen}
+              exact
+            />
+            <Route
+              path='/responsable/seance'
+              component={AddSeanceScreen}
               exact
             />
           </Switch>

@@ -82,6 +82,9 @@ const Header = ({ history }) => {
                     <LinkContainer to='/profile'>
                       <NavDropdown.Item>profile</NavDropdown.Item>
                     </LinkContainer>
+                    <LinkContainer to='/client/factures'>
+                      <NavDropdown.Item>factures</NavDropdown.Item>
+                    </LinkContainer>
                     <Route
                       render={({ history }) => (
                         <NavDropdown.Item

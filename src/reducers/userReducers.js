@@ -68,6 +68,26 @@ import {
   GET_CART_SUCCESS,
   GET_CART_FAIL,
   CREATE_CART_RESET,
+  REGLER_ACHAT_REQUEST,
+  REGLER_ACHAT_SUCCESS,
+  REGLER_ACHAT_FAIL,
+  REMOVE_FROM_CART_REQUEST,
+  REMOVE_FROM_CART_SUCCESS,
+  REMOVE_FROM_CART_FAIL,
+  LIST_FACTURES_REQUEST,
+  LIST_FACTURES_SUCCESS,
+  LIST_FACTURES_FAIL,
+  LIST_FACTURES_RESET,
+  LIST_FACTURES_ADMIN_REQUEST,
+  LIST_FACTURES_ADMIN_SUCCESS,
+  LIST_FACTURES_ADMIN_FAIL,
+  LIST_FACTURES_ADMIN_RESET,
+  FACTURE_DETAIL_ADMIN_REQUEST,
+  FACTURE_DETAIL_ADMIN_SUCCESS,
+  FACTURE_DETAIL_ADMIN_FAIL,
+  LIST_SEANCES_REQUEST,
+  LIST_SEANCES_SUCCESS,
+  LIST_SEANCES_FAIL,
 } from '../constants/userConstants';
 
 export const loginReducer = (state = {}, action) => {
@@ -386,6 +406,20 @@ export const addCartReducer = (state = {}, action) => {
   }
 };
 
+export const clientRemoveItemReducer = (state = {}, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case REMOVE_FROM_CART_REQUEST:
+      return { Loading: true };
+    case REMOVE_FROM_CART_SUCCESS:
+      return { Loading: false, successDelete: true };
+    case REMOVE_FROM_CART_FAIL:
+      return { Loading: false, errorDelete: payload };
+    default:
+      return state;
+  }
+};
+
 export const userDeleteImageReducer = (state = {}, action) => {
   const { type, payload } = action;
   switch (type) {
@@ -395,6 +429,101 @@ export const userDeleteImageReducer = (state = {}, action) => {
       return { Loading: false, successDelete: true };
     case DELETE_USER_IMAGE_FAIL:
       return { Loading: false, errorDelete: payload };
+    default:
+      return state;
+  }
+};
+
+export const achatRegleReducer = (state = {}, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case REGLER_ACHAT_REQUEST:
+      return { Loading: true };
+    case REGLER_ACHAT_SUCCESS:
+      return { Loading: false, successPay: true };
+    case REGLER_ACHAT_FAIL:
+      return { Loading: false, errorPay: payload };
+    default:
+      return state;
+  }
+};
+
+export const clientListFacturesReducer = (state = { factures: [] }, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case LIST_FACTURES_REQUEST:
+      return { Loading: true };
+    case LIST_FACTURES_SUCCESS:
+      return {
+        Loading: false,
+        factures: payload.content,
+        itemsCountPerPage: payload.size,
+        totalPages: payload.totalPages,
+        totalElements: payload.totalElements,
+      };
+    case LIST_FACTURES_FAIL:
+      return { Loading: false, error: payload };
+    case LIST_FACTURES_RESET:
+      return { factures: [] };
+    default:
+      return state;
+  }
+};
+
+export const clientsListFacturesAdminReducer = (
+  state = { factures: [] },
+  action
+) => {
+  const { type, payload } = action;
+  switch (type) {
+    case LIST_FACTURES_ADMIN_REQUEST:
+      return { Loading: true };
+    case LIST_FACTURES_ADMIN_SUCCESS:
+      return {
+        Loading: false,
+        factures: payload.content,
+        itemsCountPerPage: payload.size,
+        totalPages: payload.totalPages,
+        totalElements: payload.totalElements,
+      };
+    case LIST_FACTURES_ADMIN_FAIL:
+      return { Loading: false, error: payload };
+    case LIST_FACTURES_ADMIN_RESET:
+      return { factures: [] };
+    default:
+      return state;
+  }
+};
+
+export const detailFactureAdminReducer = (state = { facture: {} }, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case FACTURE_DETAIL_ADMIN_REQUEST:
+      return { Loading: true };
+    case FACTURE_DETAIL_ADMIN_SUCCESS:
+      return {
+        Loading: false,
+        facture: payload,
+      };
+    case LIST_FACTURES_ADMIN_FAIL:
+      return { Loading: false, error: payload };
+    default:
+      return state;
+  }
+};
+
+export const listSeancesReducer = (state = { seances: [] }, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case LIST_SEANCES_REQUEST:
+      return { Loading: true };
+    case LIST_SEANCES_SUCCESS:
+      return {
+        Loading: false,
+        seances: payload,
+      };
+    case LIST_SEANCES_FAIL:
+      return { Loading: false, error: payload };
     default:
       return state;
   }

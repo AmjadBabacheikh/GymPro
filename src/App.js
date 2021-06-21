@@ -12,11 +12,13 @@ import ClientsListScreen from './screens/ClientsListScreen';
 import CoachListScreen from './screens/CoachListScreen';
 import ResponsableListScreen from './screens/ResponsableListScreen';
 import ResponableDashboard from './screens/ResponableDashboard';
-import ServicesScreen from './screens/ServicesScreen';
+import CoursesScreen from './screens/CoursesScreen';
 import ServiceDetailScreen from './screens/ServiceDetailScreen';
 import CartScreen from './screens/CartScreen';
 import AdminDashboard from './screens/AdminDashboard';
 import OrderScreen from './screens/OrderScreen';
+import FacturesClientsScreen from './screens/FacturesClientsScreen';
+import ClassesScreen from './screens/ClassesScreen';
 import './App.css';
 const App = () => {
   return (
@@ -45,10 +47,16 @@ const App = () => {
             component={ResponableDashboard}
             // exact
           />
-          <Route path='/services' component={ServicesScreen} exact />
+          <Route path='/services' component={CoursesScreen} exact />
           {/* </Container> */}
           <Route path='/services/:id' component={ServiceDetailScreen} exact />
           <Route path='/cart' component={CartScreen} exact />
+          <Route
+            path='/client/factures'
+            component={FacturesClientsScreen}
+            exact
+          />
+          <Route path='/classes' component={ClassesScreen} exact />
         </Switch>
       </main>
       <Footer />

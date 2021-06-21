@@ -61,7 +61,7 @@ const ClientsListScreen = ({ history, match }) => {
                 <td>{`${user.profil.prenom} ${user.profil.nom}`}</td>
                 <td>{user.email}</td>
                 <td>
-                  {!user.banned ? (
+                  {!user.isBanned ? (
                     <Button
                       variant='danger'
                       className='btn-sm mx-3'
@@ -78,7 +78,7 @@ const ClientsListScreen = ({ history, match }) => {
                       <i class='fas fa-user-plus'></i>
                     </Button>
                   )}
-                  <LinkContainer to={`/admin/client/${user.id}/edit`}>
+                  <LinkContainer to={`/admin/client/${user.id}`}>
                     <Button variant='primary' className='btn-sm'>
                       <i className='fas fa-eye'></i>
                     </Button>
@@ -94,6 +94,7 @@ const ClientsListScreen = ({ history, match }) => {
         pages={totalPages}
         isAdmin={true}
         list='clientslist'
+        role='admin'
       />
     </Container>
   );

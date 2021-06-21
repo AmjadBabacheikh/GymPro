@@ -10,41 +10,45 @@ import {
   Modal,
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import {
-  getResponsables,
-  deleteEmploye,
-  addResponsable,
-} from '../actions/userActions';
+import { getCoupons, addCoupon } from '../actions/reponsableActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
 
 const CouponsListScreen = ({ history, match }) => {
   const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
   const [remise, setRemise] = useState('');
   const [reference, setReference] = useState('');
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const couponAdd = useSelector((state) => state.couponAdd);
-  const { Loading, successAdd, errorAdd } = couponAdd;
-  //   const pageNumber = match.params.pageNumber || 0;
+  const { Loading: LoadingAdd, successAdd, errorAdd } = couponAdd;
+  const couponsList = useSelector((state) => state.couponsList);
+  const {
+    Loading,
+    coupons,
+    error,
+    totalPages,
+    itemsCountPerPage,
+    totalItemsCount,
+  } = couponsList;
+  const pageNumber = match.params.pageNumber || 0;
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   useEffect(() => {
     if (userInfo && userInfo.user.role === 'responsable') {
-      dispatch(getCoupons());
+      dispatch(getCoupons(parseInt(pageNumber)));
     } else if (successAdd) {
       setShow(false);
-      dispatch(getResponsables());
+      dispatch(getCoupons(parseInt(pageNumber)));
     } else {
       history.push('/');
     }
-  }, [dispatch, history, userInfo, successAdd]);
+  }, [dispatch, history, userInfo, successAdd, pageNumber]);
 
   const submitCreateHandler = (e) => {
-    e.preventDefault();
-
     e.preventDefault();
     dispatch(addCoupon(reference, remise));
     setRemise('');
@@ -54,7 +58,7 @@ const CouponsListScreen = ({ history, match }) => {
     <Container>
       <Row>
         <Col>
-          <h3 className='my-1 py-2'>Responsables List </h3>
+          <h3 className='my-1 py-2'>Coupons List </h3>
         </Col>
         <Col>
           <Button
@@ -62,7 +66,7 @@ const CouponsListScreen = ({ history, match }) => {
             onClick={handleShow}
             style={{ float: 'right' }}
           >
-            Nouveau Responsable
+            Nouveau Coupon
           </Button>
         </Col>
       </Row>
@@ -75,56 +79,22 @@ const CouponsListScreen = ({ history, match }) => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>CIN</th>
-              <th> Name</th>
-              <th>EMAIL</th>
-              <th>ACTIVITY</th>
+              <th>REFERENCE</th>
+              <th> REMISE</th>
             </tr>
           </thead>
           <tbody>
-            {responsables.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.profil.cin}</td>
-                <td>{`${user.profil.prenom} ${user.profil.nom}`}</td>
-                <td>{user.email}</td>
-
-                <td>
-                  {/* <LinkContainer to={`/admin/user/${user.id}/edit`}>
-                    <Button variant='light' className='btn-sm'>
-                      <i className="fas fa-eye"></i>
-                    </Button>
-                  </LinkContainer> */}
-
-                  {!user.banned ? (
-                    <Button
-                      variant='danger'
-                      className='btn-sm mx-4'
-                      onClick={() => deleteEmployeHandler(user.id)}
-                    >
-                      <i className='fas fa-user-minus'></i>
-                    </Button>
-                  ) : (
-                    <Button
-                      variant='success'
-                      className='btn-sm mx-4'
-                      onClick={() => deleteEmployeHandler(user.id)}
-                    >
-                      <i class='fas fa-user-plus'></i>
-                    </Button>
-                  )}
-                  <LinkContainer to={`/admin/employe/${user.id}/edit`}>
-                    <Button variant='primary' className='btn-sm'>
-                      <i className='fas fa-eye'></i>
-                    </Button>
-                  </LinkContainer>
-                </td>
+            {coupons.map((coupon) => (
+              <tr key={coupon.id}>
+                <td>{coupon.id}</td>
+                <td>{coupon.reference}</td>
+                <td>{coupon.remise * 100} %</td>
               </tr>
             ))}
           </tbody>
           <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>Add Responsable</Modal.Title>
+              <Modal.Title>Add Coupon</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form.Group controlId='reference'>
@@ -138,8 +108,8 @@ const CouponsListScreen = ({ history, match }) => {
                   }}
                 />
               </Form.Group>
-              <Form.Group controlId='reference'>
-                <Form.Label>reference</Form.Label>
+              <Form.Group controlId='remise'>
+                <Form.Label>remise</Form.Label>
                 <Form.Control
                   type='number'
                   placeholder='entrer remise'
@@ -161,12 +131,13 @@ const CouponsListScreen = ({ history, match }) => {
           </Modal>
         </Table>
       )}
-      {/* <Paginate
+      <Paginate
         page={totalItemsCount}
         pages={totalPages}
         isAdmin={true}
-        list='responsablelist'
-      /> */}
+        list='couponlist'
+        role='responsable'
+      />
     </Container>
   );
 };

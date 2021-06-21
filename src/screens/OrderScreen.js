@@ -4,9 +4,10 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { ListGroup, Row, Col, Image, Button, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { getCart } from '../actions/userActions';
+import { getCart, reglerAchat } from '../actions/userActions';
 import Message from '../components/Loader';
 import Loader from '../components/Loader';
+import { base64StringToBlob } from 'blob-util';
 
 const OrderScreen = ({ match }) => {
   const [isSdk, setSdk] = useState(false);
@@ -14,6 +15,8 @@ const OrderScreen = ({ match }) => {
   const userCart = useSelector((state) => state.userCart);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  const achatRegle = useSelector((state) => state.achatRegle);
+  const { Loading: LoadingPay, successPay, errorPay } = achatRegle;
   const { Loading, cart, error } = userCart;
 
   const isEmpty = function (obj) {
@@ -23,12 +26,35 @@ const OrderScreen = ({ match }) => {
     return true;
   };
   useEffect(() => {
-    if (isEmpty(cart)) {
+    const addPaypalScript = async () => {
+      const { data } = await axios.get('/api/client/config/paypal');
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
+      script.async = true;
+      script.onload = () => {
+        setSdk(true);
+      };
+      document.body.appendChild(script);
+    };
+    if (isEmpty(cart) || successPay) {
       dispatch(getCart());
+    } else {
+      if (!window.paypal) {
+        addPaypalScript();
+      } else {
+        setSdk(true);
+      }
     }
   }, [dispatch]);
-  const successPaymentHandler = (paymentResult) => {
-    // dispatch(payOrder(orderId, paymentResult));
+  const successPaymentHandler = () => {
+    dispatch(reglerAchat());
+  };
+  const convertToImage = (response) => {
+    var contentType = 'image/png';
+    const blob = base64StringToBlob(response, contentType);
+    var blobUrl = URL.createObjectURL(blob);
+    return blobUrl;
   };
   return (
     <Container>
@@ -48,33 +74,35 @@ const OrderScreen = ({ match }) => {
                   <h6>Email : {userInfo.user.email}</h6>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  {cart.services.length === 0 ? (
+                  {cart.achatDetails.length === 0 ? (
                     <Message variant='info'>Your cart is empty </Message>
                   ) : (
                     <ListGroup variant='flush'>
-                      {cart.services.map((item, index) => (
+                      {cart.achatDetails.map((item, index) => (
                         <ListGroup.Item key={index}>
                           <Row>
                             <Col md={3}>
                               <Image
-                                src={item.image}
-                                alt={item.description}
+                                src={convertToImage(item.service.imgBytes)}
+                                alt={item.service.service.description}
                                 rounded
                                 fluid
                               />
                             </Col>
                             <Col>
                               <Link
-                                to={`/services/${item.id}`}
+                                to={`/services/${item.service.service.id}`}
                                 style={{
                                   textDecoration: 'none',
-                                  color: 'black',
+                                  color: '#1f3c88',
+                                  fontSize: 18,
                                 }}
                               >
-                                {item.description}
+                                {item.service.service.description}
                               </Link>
                             </Col>
-                            <Col md={4}>{item.prix} DH</Col>
+                            <Col md={2}>{item.service.service.prix} DH</Col>
+                            <Col md={2}>× {item.qte}</Col>
                           </Row>
                         </ListGroup.Item>
                       ))}
@@ -91,15 +119,23 @@ const OrderScreen = ({ match }) => {
                 <ListGroup.Item>
                   <Row>
                     <Col>Items</Col>
-                    <Col>{cart.services.length}</Col>
+                    <Col>
+                      {cart.achatDetails
+                        .reduce((acc, item) => acc + item.qte, 0)
+                        .toFixed(0)}
+                    </Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
                     <Col>Total</Col>
                     <Col>
-                      {cart.services
-                        .reduce((acc, item) => acc + item.prix, 0)
+                      {cart.achatDetails
+                        .reduce(
+                          (acc, item) =>
+                            acc + item.service.service.prix * item.qte,
+                          0
+                        )
                         .toFixed(2)}
                       <span> </span>
                       DH
@@ -108,12 +144,21 @@ const OrderScreen = ({ match }) => {
                 </ListGroup.Item>
                 {/* {!order.isPaid && ( */}
                 <ListGroup.Item>
-                  <PayPalButton
-                    amount={cart.services
-                      .reduce((acc, item) => acc + item.prix, 0)
-                      .toFixed(2)}
-                    onSuccess={successPaymentHandler}
-                  />
+                  {LoadingPay && <Loader />}
+                  {!isSdk ? (
+                    <Loader />
+                  ) : (
+                    <PayPalButton
+                      amount={cart.achatDetails
+                        .reduce(
+                          (acc, item) =>
+                            acc + item.service.service.prix * item.qte,
+                          0
+                        )
+                        .toFixed(2)}
+                      onSuccess={successPaymentHandler}
+                    />
+                  )}
                 </ListGroup.Item>
               </ListGroup>
             </Col>

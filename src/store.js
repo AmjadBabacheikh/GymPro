@@ -21,6 +21,12 @@ import {
   coachsListReducer,
   addCartReducer,
   cartReducer,
+  achatRegleReducer,
+  clientRemoveItemReducer,
+  clientListFacturesReducer,
+  clientsListFacturesAdminReducer,
+  detailFactureAdminReducer,
+  listSeancesReducer,
 } from './reducers/userReducers';
 import {
   coursListReducer,
@@ -31,6 +37,9 @@ import {
 import {
   abonnementAddReducer,
   couponAddReducer,
+  couponsListReducer,
+  coachsListRespoReducer,
+  seanceAddReducer,
 } from './reducers/responsableReducer.js';
 
 const userLoginFromStorage = localStorage.getItem('userInfo')
@@ -62,6 +71,15 @@ const reducer = combineReducers({
   addCart: addCartReducer,
   userCart: cartReducer,
   couponAdd: couponAddReducer,
+  couponsList: couponsListReducer,
+  achatRegle: achatRegleReducer,
+  clientRemoveItem: clientRemoveItemReducer,
+  clientListFactures: clientListFacturesReducer,
+  clientsListFacturesAdmin: clientsListFacturesAdminReducer,
+  detailFactureAdmin: detailFactureAdminReducer,
+  coachsListRespo: coachsListRespoReducer,
+  seanceAdd: seanceAddReducer,
+  listSeances: listSeancesReducer,
 });
 const initialState = {
   userLogin: {

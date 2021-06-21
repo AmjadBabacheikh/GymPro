@@ -14,9 +14,9 @@ const Footer = () => {
             </Row>
             <Row>
               <p className='py-4 px-2'>
-                Donasid a développé une expertise technique et opérationnelle
-                qui le positionne en acteur incontournable du marché marocain
-                avec la gamme la plus complète de produits longs, conformes aux
+                GymPro a développé une expertise technique et opérationnelle qui
+                le positionne en acteur incontournable du marché marocain avec
+                la gamme la plus complète de produits longs, conformes aux
                 exigences des normes nationales du secteur.
               </p>
             </Row>

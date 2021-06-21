@@ -34,7 +34,7 @@ const ProfileUserScreen = ({ history }) => {
       dispatch(getMyProfile());
       dispatch(getMyImage());
     }
-  }, [dispatch, history]);
+  }, [dispatch]);
 
   const uploadImageHandler = async (e) => {
     const file = e.target.files[0];

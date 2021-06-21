@@ -60,6 +60,26 @@ import {
   GET_CART_REQUEST,
   GET_CART_SUCCESS,
   GET_CART_FAIL,
+  REGLER_ACHAT_REQUEST,
+  REGLER_ACHAT_SUCCESS,
+  REGLER_ACHAT_FAIL,
+  REMOVE_FROM_CART_REQUEST,
+  REMOVE_FROM_CART_SUCCESS,
+  REMOVE_FROM_CART_FAIL,
+  LIST_FACTURES_REQUEST,
+  LIST_FACTURES_SUCCESS,
+  LIST_FACTURES_FAIL,
+  LIST_FACTURES_RESET,
+  LIST_FACTURES_ADMIN_REQUEST,
+  LIST_FACTURES_ADMIN_SUCCESS,
+  LIST_FACTURES_ADMIN_FAIL,
+  LIST_FACTURES_ADMIN_RESET,
+  FACTURE_DETAIL_ADMIN_REQUEST,
+  FACTURE_DETAIL_ADMIN_SUCCESS,
+  FACTURE_DETAIL_ADMIN_FAIL,
+  LIST_SEANCES_REQUEST,
+  LIST_SEANCES_SUCCESS,
+  LIST_SEANCES_FAIL,
 } from '../constants/userConstants';
 
 export const login = (email, password) => async (dispatch) => {
@@ -631,9 +651,10 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_REGISTER_RESET });
   dispatch({ type: USER_PROFILE_RESET });
+  dispatch({ type: LIST_FACTURES_RESET });
 };
 
-export const createCart = (services) => async (dispatch, getState) => {
+export const createCart = (serviceId, qte) => async (dispatch, getState) => {
   try {
     dispatch({
       type: CREATE_CART_REQUEST,
@@ -647,7 +668,13 @@ export const createCart = (services) => async (dispatch, getState) => {
         Authorization: `${userInfo.jwt}`,
       },
     };
-    await axios.post('/api/client/cart', { services }, config);
+    await axios.post(
+      '/api/client/cart',
+      {
+        achatDetails: [{ service: { id: serviceId }, qte }],
+      },
+      config
+    );
     dispatch({ type: CREATE_CART_SUCCESS });
   } catch (error) {
     dispatch({
@@ -679,6 +706,163 @@ export const getCart = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: GET_CART_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+export const reglerAchat = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: REGLER_ACHAT_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    const { data } = await axios.post(`/api/client/factures/`, null, config);
+    dispatch({ type: REGLER_ACHAT_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: REGLER_ACHAT_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const removeItemFromCart = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: REMOVE_FROM_CART_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    await axios.delete(`/api/client/cart/services/${id}`, config);
+    dispatch({ type: REMOVE_FROM_CART_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: REMOVE_FROM_CART_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+export const getClientFacture = (pageNo) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: LIST_FACTURES_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    const { data } = await axios.get(
+      `/api/client/factures?pageNo=${pageNo}&pageSize=${2}`,
+      config
+    );
+    dispatch({ type: LIST_FACTURES_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: LIST_FACTURES_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getAllFactures = (pageNo) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: LIST_FACTURES_ADMIN_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    const { data } = await axios.get(
+      `/api/admin/factures?pageNo=${pageNo}&pageSize=${4}`,
+      config
+    );
+    dispatch({ type: LIST_FACTURES_ADMIN_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: LIST_FACTURES_ADMIN_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getFactureDetailAdmin = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: FACTURE_DETAIL_ADMIN_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    const { data } = await axios.get(`/api/admin/factures/${id}`, config);
+    dispatch({ type: FACTURE_DETAIL_ADMIN_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: FACTURE_DETAIL_ADMIN_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getSeances = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: LIST_SEANCES_REQUEST,
+    });
+    const { data } = await axios.get(`/api/seances`);
+    dispatch({ type: LIST_SEANCES_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: LIST_SEANCES_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

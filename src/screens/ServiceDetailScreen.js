@@ -17,6 +17,7 @@ import { getServicesDetail } from '../actions/coursActions';
 import { createCart, getCart } from '../actions/userActions';
 import { CREATE_CART_RESET } from '../constants/userConstants';
 import { Link } from 'react-router-dom';
+import { base64StringToBlob } from 'blob-util';
 
 const ServiceDetailScreen = ({ match, history }) => {
   const serviceId = match.params.id;
@@ -42,21 +43,30 @@ const ServiceDetailScreen = ({ match, history }) => {
     if (isEmpty(service) || service.id !== serviceId) {
       dispatch(getServicesDetail(serviceId));
     }
-  }, [dispatch, serviceId]);
+  }, [dispatch, serviceId, success]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (cart.services) {
-      // const found = cart.services.some((el) => el.id === serviceId);
-      // if (found) {
-      //   setMessage('ce service existe deja dans votre carte');
-      // } else {
-      if (cart.services && cart.services !== []) {
-        dispatch(createCart([service, ...cart.services]));
-      } else {
-        dispatch(createCart([service]));
-      }
-      // }
-    }
+    // if (cart.achatDetails) {
+    //   // const found = cart.services.some((el) => el.id === serviceId);
+    //   // if (found) {
+    //   //   setMessage('ce service existe deja dans votre carte');
+    //   // } else {
+    //   // if (cart.achatDetails && cart.achatDetails !== []) {
+    //   //   dispatch(createCart([{ service.service, qte: 1 }, ...cart.achatDetails]));
+
+    //   // } else {
+    //   //   dispatch(createCart([{ service.service, qte: 1 }]));
+    //   // }
+    //   // }
+    //   dispatch(createCart([item]));
+    // }
+    dispatch(createCart(serviceId, 1));
+  };
+  const convertToImage = (response) => {
+    var contentType = 'image/png';
+    const blob = base64StringToBlob(response, contentType);
+    var blobUrl = URL.createObjectURL(blob);
+    return blobUrl;
   };
   return (
     <Container>
@@ -71,50 +81,56 @@ const ServiceDetailScreen = ({ match, history }) => {
       ) : error ? (
         <Message>{error}</Message>
       ) : (
-        <Container className='my-4'>
-          <Row>
-            <Col md={6} xs={12}>
-              <Image
-                alt={service.description}
-                src={service.image}
-                thumbnail
-                fluid
-              />
-            </Col>
-            <Col md={6} xs={12} className='my-4'>
+        <>
+          {!isEmpty(service) && (
+            <Container className='my-4'>
               <Row>
-                <h3 style={{ color: '#121212' }}>{service.description}</h3>
+                <Col md={6} xs={12}>
+                  <Image
+                    alt={service.service.description}
+                    src={convertToImage(service.imgBytes)}
+                    thumbnail
+                    fluid
+                  />
+                </Col>
+                <Col md={6} xs={12} className='my-4'>
+                  <Row>
+                    <h3 style={{ color: '#121212' }}>
+                      {service.service.description}
+                    </h3>
+                  </Row>
+                  <Row>
+                    <h2 style={{ color: '#666' }}>
+                      <span style={{ color: '#ee6f57', fontWeight: 'bold' }}>
+                        {service.service.prix}
+                      </span>
+                      MAD pendant {service.service.duree} mois
+                    </h2>
+                    <h4>Engagement {service.service.duree} mois</h4>
+                    <h5 style={{ color: '#666' }}>
+                      INCLUS DANS VOTRE PACK AVANTAGES
+                    </h5>
+                  </Row>
+                  <Row>
+                    <Form onSubmit={handleSubmit}>
+                      <Button
+                        variant='primary'
+                        type='submit'
+                        className='my-2 btn-sm'
+                        style={{ backgroundColor: '#ee6f57' }}
+                      >
+                        Je m'abonne
+                      </Button>
+                    </Form>
+                  </Row>
+                  <Row>
+                    {message && <Message variant='danger'>{message}</Message>}
+                  </Row>
+                </Col>
               </Row>
-              <Row>
-                <h2 style={{ color: '#666' }}>
-                  <span style={{ color: '#ee6f57', fontWeight: 'bold' }}>
-                    {service.prix}
-                  </span>
-                  MAD pendant {service.duree} mois
-                </h2>
-                <h4>Engagement {service.duree} mois</h4>
-                <h5 style={{ color: '#666' }}>
-                  INCLUS DANS VOTRE PACK AVANTAGES
-                </h5>
-              </Row>
-              <Row>
-                <Form onSubmit={handleSubmit}>
-                  <Button
-                    variant='primary'
-                    type='submit'
-                    className='my-2 btn-sm'
-                    style={{ backgroundColor: '#ee6f57' }}
-                  >
-                    Je m'abonne
-                  </Button>
-                </Form>
-              </Row>
-              <Row>
-                {message && <Message variant='danger'>{message}</Message>}
-              </Row>
-            </Col>
-          </Row>
-        </Container>
+            </Container>
+          )}
+        </>
       )}
     </Container>
   );

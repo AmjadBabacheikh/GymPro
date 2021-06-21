@@ -5,19 +5,31 @@ import SideBar from '../components/SideBar';
 import ClientsListScreen from './ClientsListScreen';
 import ResponsableListScreen from './ResponsableListScreen';
 import CoachListScreen from './CoachListScreen';
+import ClientAdminInfo from './ClientAdminInfo';
+import EmployeAdminInfo from './EmployeAdminInfo';
+import FacturesListAdmin from './FacturesListAdmin';
+import DetailFactureAdminScreen from './DetailFactureAdminScreen';
 import '../components/SideBar.css';
 const links = [
   {
     title: 'Clients',
     route: '/admin/clientslist',
+    icon: 'fas fa-user mx-3',
   },
   {
     title: 'Responsables',
     route: '/admin/responsablelist',
+    icon: 'fas fa-user mx-3',
   },
   {
     title: 'Coachs',
     route: '/admin/coachlist',
+    icon: 'fas fa-user mx-3',
+  },
+  {
+    title: 'Factures',
+    route: '/admin/factureslist',
+    icon: 'fas fa-file-invoice mx-3',
   },
 ];
 const AdminDashboard = (props) => {
@@ -34,6 +46,7 @@ const AdminDashboard = (props) => {
               component={ClientsListScreen}
               exact
             />
+            <Route path='/admin' component={ClientsListScreen} exact />
             <Route
               path='/admin/clientslist/:pageNumber'
               component={ClientsListScreen}
@@ -50,6 +63,27 @@ const AdminDashboard = (props) => {
               exact
             />
             <Route path='/admin/coachlist' component={CoachListScreen} exact />
+            <Route path='/admin/client/:id' component={ClientAdminInfo} exact />
+            <Route
+              path='/admin/employe/:id'
+              component={EmployeAdminInfo}
+              exact
+            />
+            <Route
+              path='/admin/factureslist'
+              component={FacturesListAdmin}
+              exact
+            />
+            <Route
+              path='/admin/factureslist/:pageNumber'
+              component={FacturesListAdmin}
+              exact
+            />
+            <Route
+              path='/admin/facture/:id'
+              component={DetailFactureAdminScreen}
+              exact
+            />
           </Switch>
         </Col>
       </Row>

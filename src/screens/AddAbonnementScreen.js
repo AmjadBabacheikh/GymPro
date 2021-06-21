@@ -7,13 +7,15 @@ import { addAbonnement } from '../actions/reponsableActions';
 import Message from '../components/Message';
 import FormContainer from '../components/FormContainer';
 import './SignUpScreen.css';
+import axios from 'axios';
 
 const AddAbonnementScreen = ({ history }) => {
   const dispatch = useDispatch();
   const [durée, setDuree] = useState('');
   const [description, setDescription] = useState('');
   const [prix, setPrix] = useState('');
-  const [image, setImage] = useState('');
+  const [img, setImage] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -25,14 +27,40 @@ const AddAbonnementScreen = ({ history }) => {
       history.push('/');
     }
   }, [history, userInfo]);
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    setUploading(true);
 
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `${userInfo.jwt}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        '/api/responsable/abonnement/image',
+        formData,
+        config
+      );
+
+      setImage(data);
+      setUploading(false);
+    } catch (error) {
+      console.error(error);
+      setUploading(false);
+    }
+  };
   const handleInscription = (e) => {
     e.preventDefault();
-    dispatch(addAbonnement(prix, description, parseInt(durée), image));
-    setDescription('');
-    setDuree(0);
-    setPrix(0.0);
-    setImage('');
+    dispatch(addAbonnement(prix, description, parseInt(durée), img));
+    // setDescription('');
+    // setDuree(0);
+    // setPrix(0.0);
+    // setImage('');
   };
   return (
     <FormContainer className='align-middle'>
@@ -81,15 +109,20 @@ const AddAbonnementScreen = ({ history }) => {
           />
         </Form.Group>
         <Form.Group controlId='image'>
-          <Form.Label>image</Form.Label>
+          <Form.Label>Image</Form.Label>
           <Form.Control
-            type=''
-            placeholder=''
-            value={image}
-            onChange={(e) => {
-              setImage(e.target.value);
-            }}
-          />
+            type='text'
+            placeholder='Enter image url'
+            value={img}
+            onChange={(e) => setImage(e.target.value)}
+          ></Form.Control>
+          <Form.File
+            id='image-file'
+            label='Choose File'
+            custom
+            onChange={uploadFileHandler}
+          ></Form.File>
+          {uploading && <Loader />}
         </Form.Group>
 
         <div className='my-4'>

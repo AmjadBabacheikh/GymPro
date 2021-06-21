@@ -5,7 +5,7 @@ import Message from './Message';
 import Loader from './Loader';
 import { getServices } from '../actions/coursActions';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { base64StringToBlob } from 'blob-util';
 
 const ServicesCarousel = () => {
   const dispatch = useDispatch();
@@ -15,6 +15,12 @@ const ServicesCarousel = () => {
     dispatch(getServices());
   }, [dispatch]);
 
+  const convertToImage = (response) => {
+    var contentType = 'image/png';
+    const blob = base64StringToBlob(response, contentType);
+    var blobUrl = URL.createObjectURL(blob);
+    return blobUrl;
+  };
   return Loading ? (
     <Loader />
   ) : error ? (
@@ -22,27 +28,27 @@ const ServicesCarousel = () => {
   ) : (
     <>
       <Carousel pause='hover' className='bg-primary my-3'>
-        {services.map((service) => (
+        {services.map((item) => (
           <Carousel.Item
-            key={service.id}
+            key={item.service.id}
             pause='hover'
             className='bg-secondary'
           >
-            <Link to={`/services/${service.id}`}>
+            <Link to={`/services/${item.service.id}`}>
               <Image
-                src={service.image}
-                alt={service.description}
+                src={convertToImage(item.imgBytes)}
+                alt={item.service.description}
                 fluid
                 style={{ width: '40rem', borderRadius: 50 }}
               />
               <Carousel.Caption className='carousel-caption'>
                 <h2>
-                  <span>{service.description}</span>
+                  <span>{item.service.description}</span>
                   <span className='px-1' style={{ color: '#ee6f57' }}>
-                    {service.prix} DH
+                    {item.service.prix} DH
                   </span>{' '}
                   <br />
-                  <span className='px-1'> {service.duree} Mois</span>
+                  <span className='px-1'> {item.service.duree} Mois</span>
                 </h2>
               </Carousel.Caption>
             </Link>

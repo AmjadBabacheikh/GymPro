@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { base64StringToBlob } from 'blob-util';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Row,
@@ -11,7 +12,7 @@ import {
   Card,
   Container,
 } from 'react-bootstrap';
-import { getCart } from '../actions/userActions';
+import { getCart, removeItemFromCart } from '../actions/userActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 
@@ -22,6 +23,12 @@ const CartScreen = ({ match, location, history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const { Loading, cart, error } = userCart;
+  const clientRemoveItem = useSelector((state) => state.clientRemoveItem);
+  const {
+    Loading: LoadingDelete,
+    successDelete,
+    errorDelete,
+  } = clientRemoveItem;
 
   const isEmpty = function (obj) {
     for (var key in obj) {
@@ -31,12 +38,14 @@ const CartScreen = ({ match, location, history }) => {
   };
   useEffect(() => {
     dispatch(getCart());
-  }, [dispatch]);
+  }, [dispatch, successDelete]);
 
   const removeFromCartHandler = (id) => {
-    // dispatch(removeFromCart(id));
+    if (window.confirm('are you sure')) {
+      dispatch(removeItemFromCart(id));
+    }
   };
-
+  const checkCouponHandler = () => {};
   const checkoutHandler = () => {
     // if (userInfo) {
     //   history.push('/shipping');
@@ -45,7 +54,12 @@ const CartScreen = ({ match, location, history }) => {
     // }
     history.push('/payment');
   };
-
+  const convertToImage = (response) => {
+    var contentType = 'image/png';
+    const blob = base64StringToBlob(response, contentType);
+    var blobUrl = URL.createObjectURL(blob);
+    return blobUrl;
+  };
   return (
     <Container className='my-3'>
       <h2 className='mx-3'>Shopping Cart</h2>
@@ -56,32 +70,38 @@ const CartScreen = ({ match, location, history }) => {
         <Row>
           <Col md={8}>
             <ListGroup variant='flush'>
-              {cart.services.map((item, index) => (
+              {cart.achatDetails.map((item, index) => (
                 <ListGroup.Item key={index}>
                   <Row>
                     <Col md={3}>
                       <Image
-                        src={item.image}
-                        alt={item.description}
+                        src={convertToImage(item.service.imgBytes)}
+                        alt={item.service.service.description}
                         fluid
                         rounded
                       />
                     </Col>
                     <Col md={3}>
                       <Link
-                        to={`/services/${item.id}`}
-                        style={{ textDecoration: 'none', color: '#000000' }}
+                        to={`/services/${item.service.service.id}`}
+                        style={{
+                          textDecoration: 'none',
+                          color: '#1f3c88',
+                          fontSize: 18,
+                        }}
                       >
-                        {item.description}
+                        {item.service.service.description}
                       </Link>
                     </Col>
-                    <Col md={2}>{item.prix} DH</Col>
-
+                    <Col md={2}>{item.service.service.prix} DH</Col>
+                    <Col md={2}>× {item.qte}</Col>
                     <Col md={2}>
                       <Button
                         type='button'
                         variant='light'
-                        onClick={() => removeFromCartHandler(item.id)}
+                        onClick={() =>
+                          removeFromCartHandler(item.service.service.id)
+                        }
                       >
                         <i className='fas fa-trash'></i>
                       </Button>
@@ -95,9 +115,18 @@ const CartScreen = ({ match, location, history }) => {
             <Card>
               <ListGroup variant='flush'>
                 <ListGroup.Item>
-                  <h2>total ({cart.services.length}) items</h2>
-                  {cart.services
-                    .reduce((acc, item) => acc + item.prix, 0)
+                  <h2>
+                    total (
+                    {cart.achatDetails
+                      .reduce((acc, item) => acc + item.qte, 0)
+                      .toFixed(0)}
+                    ) items
+                  </h2>
+                  {cart.achatDetails
+                    .reduce(
+                      (acc, item) => acc + item.service.service.prix * item.qte,
+                      0
+                    )
                     .toFixed(2)}
                   <span> </span>
                   DH
@@ -106,7 +135,7 @@ const CartScreen = ({ match, location, history }) => {
                   <Button
                     type='button'
                     className='btn-block'
-                    disabled={cart.services.length === 0}
+                    disabled={cart.achatDetails.length === 0}
                     onClick={checkoutHandler}
                   >
                     Checkout
@@ -131,8 +160,8 @@ const CartScreen = ({ match, location, history }) => {
                         <Button
                           type='button'
                           // className='btn-sm'
-                          disabled={cart.services.length === 0}
-                          onClick={checkoutHandler}
+                          disabled={cart.achatDetails.length === 0}
+                          onClick={checkCouponHandler}
                         >
                           Apply
                         </Button>
