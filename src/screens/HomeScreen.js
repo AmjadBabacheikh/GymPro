@@ -33,10 +33,17 @@ const HomeScreen = ({ history }) => {
         <Col>
           <div className='text-center py-4'>
             <h4 className='homeh4'>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Laboriosam cum cumque modi sint, labore molestias similique vel,
-              quaerat quidem unde libero dolor eos ad, iusto commodi. Unde neque
-              sed magni.
+              <h3>
+                <strong
+                  style={{
+                    fontSize: 30,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  SALLE DE SPORT HAUT DE GAMME
+                </strong>
+              </h3>
+              MUSCULATION, CARDIO, CROSS-TRAINING & BOXE EN ACCÈS ILLIMITÉ
             </h4>
           </div>
         </Col>
