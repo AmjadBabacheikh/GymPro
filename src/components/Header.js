@@ -61,13 +61,13 @@ const Header = ({ history }) => {
                   </LinkContainer>
                 </NavDropdown>
               ) : null}
-              {userInfo && userInfo.user.role !== 'client' ? (
+              {/* {userInfo && userInfo.user.role !== 'client' ? (
                 <LinkContainer to='/employe/chat'>
                   <Nav.Link className='nav-link'>
                     <i className='fas fa-envelope'></i>
                   </Nav.Link>
                 </LinkContainer>
-              ) : null}
+              ) : null} */}
               {userInfo && userInfo.user.role === 'client' ? (
                 <LinkContainer to='/cart'>
                   <Nav.Link>

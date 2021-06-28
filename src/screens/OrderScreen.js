@@ -54,9 +54,13 @@ const OrderScreen = ({ match, history }) => {
     };
     if (isEmpty(cart)) {
       dispatch(getCart());
-    } else if (successPay) {
+    }
+    if (successPay) {
       dispatch({ type: REGLER_ACHAT_RESET });
       history.push('/client/factures');
+    }
+    if (!isEmpty(coupon)) {
+      dispatch({ type: CHECK_COUPON_RESET });
     } else {
       if (!window.paypal) {
         addPaypalScript();
@@ -173,13 +177,29 @@ const OrderScreen = ({ match, history }) => {
                   <Row>
                     <Col>Total</Col>
                     <Col>
-                      {cart?.achatDetails
-                        .reduce(
-                          (acc, item) =>
-                            acc + item.service.service.prix * item.qte,
-                          0
-                        )
-                        .toFixed(2)}
+                      {!isEmpty(coupon)
+                        ? cart?.achatDetails
+                            .reduce(
+                              (acc, item) =>
+                                acc + item.service.service.prix * item.qte,
+                              0
+                            )
+                            .toFixed(2) -
+                          cart?.achatDetails
+                            .reduce(
+                              (acc, item) =>
+                                acc + item.service.service.prix * item.qte,
+                              0
+                            )
+                            .toFixed(2) *
+                            coupon.remise
+                        : cart?.achatDetails
+                            .reduce(
+                              (acc, item) =>
+                                acc + item.service.service.prix * item.qte,
+                              0
+                            )
+                            .toFixed(2)}
                       <span> </span>
                       DH
                     </Col>
@@ -210,18 +230,17 @@ const OrderScreen = ({ match, history }) => {
                           Apply
                         </Button>
                       </Col>
+                      <h5 className='px-3' style={{ color: 'red' }}>
+                        {errorCoupon ===
+                          'Request failed with status code 404' &&
+                          'wrong coupon'}
+                      </h5>
                     </Row>
                   </Form>
                   <Row>
-                    {/* {
-                      LoadingCoupon ? (
-                      <Loader />
-                    ) : errorCoupon ? (
+                    {/* {errorCoupon && (
                       <Message variant='danger'>{errorCoupon}</Message>
-                    ) : 
-                    ( */}
-                    <p>{errorCoupon}</p>
-                    {/* )} */}
+                    )} */}
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
@@ -230,13 +249,31 @@ const OrderScreen = ({ match, history }) => {
                     <Loader />
                   ) : (
                     <PayPalButton
-                      amount={cart?.achatDetails
-                        .reduce(
-                          (acc, item) =>
-                            acc + item.service.service.prix * item.qte,
-                          0
-                        )
-                        .toFixed(2)}
+                      amount={
+                        !isEmpty(coupon)
+                          ? cart?.achatDetails
+                              .reduce(
+                                (acc, item) =>
+                                  acc + item.service.service.prix * item.qte,
+                                0
+                              )
+                              .toFixed(2) -
+                            cart?.achatDetails
+                              .reduce(
+                                (acc, item) =>
+                                  acc + item.service.service.prix * item.qte,
+                                0
+                              )
+                              .toFixed(2) *
+                              coupon.remise
+                          : cart?.achatDetails
+                              .reduce(
+                                (acc, item) =>
+                                  acc + item.service.service.prix * item.qte,
+                                0
+                              )
+                              .toFixed(2)
+                      }
                       onSuccess={successPaymentHandler}
                     />
                   )}

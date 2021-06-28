@@ -20,6 +20,7 @@ import OrderScreen from './screens/OrderScreen';
 import FacturesClientsScreen from './screens/FacturesClientsScreen';
 import ClassesScreen from './screens/ClassesScreen';
 import ChatScreen from './screens/ChatScreen';
+import AboutScreen from './screens/AboutScreen';
 import './App.css';
 const App = () => {
   return (
@@ -64,6 +65,7 @@ const App = () => {
           />
           <Route path='/classes' component={ClassesScreen} exact />
           <Route path='/employe/chat' component={ChatScreen} exact />
+          <Route path='/about' component={AboutScreen} exact />
         </Switch>
       </main>
       <Footer />

@@ -152,7 +152,7 @@ const ProfileUserScreen = ({ history }) => {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Genre</Col>
+                  <Col>Gender</Col>
                   <Col className='info'>
                     <strong>{user.genre}</strong>
                   </Col>
@@ -160,7 +160,7 @@ const ProfileUserScreen = ({ history }) => {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Date Naissance</Col>
+                  <Col>Date of birth</Col>
                   <Col className='info'>
                     <strong>
                       {user.dateNaissance

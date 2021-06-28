@@ -65,8 +65,8 @@ const FacturesClientsScreen = ({ history, match }) => {
           <thead>
             <tr>
               <th>ID</th>
-              <th> DATE</th>
-              <th>MONTANT</th>
+              <th>DATE</th>
+              <th>AMOUNT</th>
 
               <th>ITEMS</th>
               <th></th>
@@ -82,7 +82,7 @@ const FacturesClientsScreen = ({ history, match }) => {
                       '   ' +
                       facture.facture.date.slice(11, 19)}
                 </td>
-                <td>{facture.facture.montant}</td>
+                <td>{facture.facture.montant} DH</td>
                 <td>{facture.services.length}</td>
                 <td>
                   <LinkContainer to={`/client/facture/${facture.id}`}>

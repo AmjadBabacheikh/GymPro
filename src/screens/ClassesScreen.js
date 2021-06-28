@@ -63,7 +63,7 @@ const ClassesScreen = ({ history }) => {
                 />
               </Col>
               <Col md={3} xs={12} style={{ float: 'right' }}>
-                <h5 className='title'>CATEGORIES</h5>
+                <h3>CATEGORIES</h3>
                 <ul>
                   {cours.map((item, index) => (
                     <li key={index}>{item.cours.nomCours}</li>
@@ -72,7 +72,7 @@ const ClassesScreen = ({ history }) => {
               </Col>
             </Row>
             <Row>
-              <h5 className='title my-4'>Classes timetable</h5>
+              <h3 className='my-4'>Classes timetable</h3>
               <Table
                 striped
                 bordered

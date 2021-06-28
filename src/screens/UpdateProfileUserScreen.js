@@ -119,7 +119,7 @@ const UpdateProfileUserScreen = ({ history }) => {
               />
             </Form.Group>
             <Form.Group controlId='firstName'>
-              <Form.Label>Prenom</Form.Label>
+              <Form.Label>First Name</Form.Label>
               <Form.Control
                 type='name'
                 value={firstName}
@@ -129,7 +129,7 @@ const UpdateProfileUserScreen = ({ history }) => {
               />
             </Form.Group>
             <Form.Group controlId='lastName'>
-              <Form.Label>Nom</Form.Label>
+              <Form.Label>Last Name</Form.Label>
               <Form.Control
                 type='name'
                 value={lastName}
@@ -139,7 +139,7 @@ const UpdateProfileUserScreen = ({ history }) => {
               />
             </Form.Group>
             <Form.Group controlId='tel'>
-              <Form.Label>Telephone</Form.Label>
+              <Form.Label>Phone</Form.Label>
               <Form.Control
                 type='text'
                 value={phoneNumber || ''}

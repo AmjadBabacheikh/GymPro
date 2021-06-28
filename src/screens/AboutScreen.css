@@ -1,0 +1,49 @@
+.contain {
+  background: #151515;
+}
+.title {
+  background-image: url('../images/breadcrumb-bg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top center;
+  height: 450px;
+  padding-top: 230px;
+  text-align: center;
+}
+.title h2 {
+  font-size: 45px;
+  color: #ffffff;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 25px;
+  font-family: 'Oswald', sans-serif;
+  line-height: 1;
+}
+.about h4,
+.about h3 {
+  text-align: center;
+}
+
+.about h4 {
+  color: #ee6f57;
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-top: 40px;
+}
+.about h5 {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+.about h3 {
+  color: #ffffff;
+  margin-bottom: 30px;
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 8px;
+}

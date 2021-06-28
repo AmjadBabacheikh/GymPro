@@ -18,7 +18,7 @@ const links = [
     icon: 'fas fa-home mx-3',
   },
   {
-    title: 'Clients',
+    title: 'Customers',
     route: '/admin/clientslist',
     icon: 'fas fa-user mx-3',
   },
@@ -33,7 +33,7 @@ const links = [
     icon: 'fas fa-user mx-3',
   },
   {
-    title: 'Factures',
+    title: 'Invoices',
     route: '/admin/factureslist',
     icon: 'fas fa-file-invoice mx-3',
   },
@@ -60,6 +60,11 @@ const AdminDashboard = (props) => {
             />
             <Route
               path='/admin/responsablelist'
+              component={ResponsableListScreen}
+              exact
+            />
+            <Route
+              path='/admin/responsablelist/:pageNumber'
               component={ResponsableListScreen}
               exact
             />

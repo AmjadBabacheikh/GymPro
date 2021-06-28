@@ -10,7 +10,7 @@ const clients = [
   {
     id: 1,
     profil: {
-      cin: '2jhjdsgf',
+      cin: 'D2345671',
       nom: 'babacheikh',
       prenom: 'amjad',
     },
@@ -19,38 +19,38 @@ const clients = [
   {
     id: 2,
     profil: {
-      cin: '2jhjdsgf',
-      nom: 'babacheikh',
-      prenom: 'amjad',
+      cin: 'N23292',
+      nom: 'kamal',
+      prenom: 'hassan',
     },
-    email: 'babacheikh@gmail.com',
+    email: 'kamal@gmail.com',
   },
   {
     id: 3,
     profil: {
-      cin: '2jhjdsgf',
-      nom: 'babacheikh',
-      prenom: 'amjad',
+      cin: 'J68721',
+      nom: 'alami',
+      prenom: 'oussama',
     },
-    email: 'babacheikh@gmail.com',
+    email: 'alami@gmail.com',
   },
   {
     id: 4,
     profil: {
-      cin: '2jhjdsgf',
-      nom: 'babacheikh',
-      prenom: 'amjad',
+      cin: 'D21190',
+      nom: 'El filali',
+      prenom: 'Abdelwahab',
     },
-    email: 'babacheikh@gmail.com',
+    email: 'elfilali@gmail.com',
   },
   {
     id: 5,
     profil: {
-      cin: '2jhjdsgf',
-      nom: 'babacheikh',
-      prenom: 'amjad',
+      cin: 'J89021',
+      nom: 'Bouhouch',
+      prenom: 'Mahdi',
     },
-    email: 'babacheikh@gmail.com',
+    email: 'bouhouch@gmail.com',
   },
 ];
 const options = {
@@ -75,7 +75,7 @@ const AnalyticsScreen = () => {
     labels: analytics?.datasets?.label,
     datasets: [
       {
-        label: '# of Votes',
+        label: '',
         data: analytics?.datasets?.data,
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
@@ -129,7 +129,7 @@ const AnalyticsScreen = () => {
                     ></i>
                   </Col>
                   <Col md={8}>
-                    <h5>Revenue</h5>
+                    <h5>Benefit</h5>
                     <h3>{analytics?.revenue}</h3>
                   </Col>
                 </Row>
@@ -145,7 +145,7 @@ const AnalyticsScreen = () => {
                     ></i>
                   </Col>
                   <Col md={8}>
-                    <h5>Clients</h5>
+                    <h5>Customers</h5>
                     <h3>{analytics?.nombreClient}</h3>
                   </Col>
                 </Row>
@@ -180,14 +180,13 @@ const AnalyticsScreen = () => {
             </Col>
             <Col className='my-4' md={4}>
               <Card className='my-2' style={{ height: '27.5rem' }}>
-                <h3 className='py-3 px-2'>Top service</h3>
+                <h3 className='py-3 px-2'>Benefit history</h3>
                 <Bar data={data} options={options} />
               </Card>
             </Col>
           </Row>
         </>
       )}
-      )
     </>
   );
 };

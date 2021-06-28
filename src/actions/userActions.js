@@ -891,11 +891,7 @@ export const checkCoupon = (reference) => async (dispatch, getState) => {
         Authorization: `${userInfo.jwt}`,
       },
     };
-    const { data } = await axios.get(
-      `/api/client/coupons`,
-      { reference: reference },
-      config
-    );
+    const { data } = await axios.get(`/api/client/coupon/${reference}`, config);
     dispatch({ type: CHECK_COUPON_SUCCESS, payload: data });
   } catch (error) {
     dispatch({

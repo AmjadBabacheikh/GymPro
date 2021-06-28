@@ -69,7 +69,7 @@ const FacturesListAdmin = ({ history, match }) => {
               <th>ID</th>
               <th>DATE</th>
               <th>CLIENT</th>
-              <th>MONTANT</th>
+              <th>AMOUNT</th>
               <th>ITEMS</th>
               <th></th>
             </tr>
@@ -89,7 +89,7 @@ const FacturesListAdmin = ({ history, match }) => {
                     <td>
                       {facture.client.profil.nom} {facture.client.profil.prenom}
                     </td>
-                    <td>{facture.facture.montant}</td>
+                    <td>{facture.facture.montant} DH</td>
                     <td>{facture.services.length}</td>
                     <td>
                       <LinkContainer to={`/admin/facture/${facture.id}`}>
@@ -104,13 +104,13 @@ const FacturesListAdmin = ({ history, match }) => {
           </tbody>
         </Table>
       )}
-      {/*<Paginate
-          page={totalItemsCount}
-          pages={totalPages}
-          isAdmin={true}
-          list='couponlist'
-          role='responsable'
-        /> */}
+      <Paginate
+        page={totalItemsCount}
+        pages={totalPages}
+        isAdmin={true}
+        list='factureslist'
+        role='admin'
+      />
     </Container>
   );
 };

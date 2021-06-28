@@ -81,7 +81,7 @@ const ServiceDetailScreen = ({ match, history }) => {
       ) : error ? (
         <Message>{error}</Message>
       ) : (
-        <>
+        <Card>
           {!isEmpty(service) && (
             <Container className='my-4'>
               <Row>
@@ -91,24 +91,27 @@ const ServiceDetailScreen = ({ match, history }) => {
                     src={convertToImage(service.imgBytes)}
                     thumbnail
                     fluid
+                    className='px-2'
                   />
                 </Col>
                 <Col md={6} xs={12} className='my-4'>
                   <Row>
-                    <h3 style={{ color: '#121212' }}>
+                    <h3 className='py-2' style={{ color: '#121212' }}>
                       {service.service.description}
                     </h3>
                   </Row>
                   <Row>
-                    <h2 style={{ color: '#666' }}>
+                    <h2 className='py-2' style={{ color: '#666' }}>
                       <span style={{ color: '#ee6f57', fontWeight: 'bold' }}>
                         {service.service.prix}
                       </span>
-                      MAD pendant {service.service.duree} mois
+                      MAD {service.service.duree} months
                     </h2>
-                    <h4>Engagement {service.service.duree} mois</h4>
-                    <h5 style={{ color: '#666' }}>
-                      INCLUS DANS VOTRE PACK AVANTAGES
+                    <h4 className='py-2'>
+                      commitment {service.service.duree} months
+                    </h4>
+                    <h5 className='py-2' style={{ color: '#666' }}>
+                      INCLUDED MANY ADVANTAGES IN YOUR PACK
                     </h5>
                   </Row>
                   <Row>
@@ -119,7 +122,7 @@ const ServiceDetailScreen = ({ match, history }) => {
                         className='my-2 btn-sm'
                         style={{ backgroundColor: '#ee6f57' }}
                       >
-                        Je m'abonne
+                        Buy now
                       </Button>
                     </Form>
                   </Row>
@@ -130,7 +133,7 @@ const ServiceDetailScreen = ({ match, history }) => {
               </Row>
             </Container>
           )}
-        </>
+        </Card>
       )}
     </Container>
   );

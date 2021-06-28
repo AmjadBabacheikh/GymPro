@@ -71,7 +71,7 @@ const ClientAdminInfo = ({ match, history }) => {
                   </ListGroup.Item>
                   <ListGroup.Item>
                     <Row>
-                      <Col>Date Naissance</Col>
+                      <Col>Birthday</Col>
                       <Col className='info'>
                         <strong>
                           {client.profil.dateNaissance
