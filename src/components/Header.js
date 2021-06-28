@@ -61,14 +61,22 @@ const Header = ({ history }) => {
                   </LinkContainer>
                 </NavDropdown>
               ) : null}
-
+              {userInfo && userInfo.user.role !== 'client' ? (
+                <LinkContainer to='/employe/chat'>
+                  <Nav.Link className='nav-link'>
+                    <i className='fas fa-envelope'></i>
+                  </Nav.Link>
+                </LinkContainer>
+              ) : null}
+              {userInfo && userInfo.user.role === 'client' ? (
+                <LinkContainer to='/cart'>
+                  <Nav.Link>
+                    <i className='fas fa-shopping-cart'></i> Cart
+                  </Nav.Link>
+                </LinkContainer>
+              ) : null}
               {userInfo ? (
                 <>
-                  <LinkContainer to='/cart'>
-                    <Nav.Link>
-                      <i className='fas fa-shopping-cart'></i> Cart
-                    </Nav.Link>
-                  </LinkContainer>
                   <NavDropdown
                     title={`${
                       !isEmpty(userInfo) &&
@@ -103,7 +111,7 @@ const Header = ({ history }) => {
               ) : (
                 <LinkContainer to='/signin'>
                   <Nav.Link className='nav-link'>
-                    <i className='fas fa-user'></i> CONNEXION
+                    <i className='fas fa-user'></i> SIGN IN
                   </Nav.Link>
                 </LinkContainer>
               )}

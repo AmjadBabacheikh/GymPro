@@ -96,13 +96,13 @@ const FacturesClientsScreen = ({ history, match }) => {
           </tbody>
         </Table>
       )}
-      {/*<Paginate
+      <Paginate
         page={totalItemsCount}
         pages={totalPages}
         isAdmin={true}
-        list='couponlist'
-        role='responsable'
-      /> */}
+        list='factures'
+        role='client'
+      />
     </Container>
   );
 };

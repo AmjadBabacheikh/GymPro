@@ -9,8 +9,14 @@ import ClientAdminInfo from './ClientAdminInfo';
 import EmployeAdminInfo from './EmployeAdminInfo';
 import FacturesListAdmin from './FacturesListAdmin';
 import DetailFactureAdminScreen from './DetailFactureAdminScreen';
+import AnalyticsScreen from './AnalyticsScreen';
 import '../components/SideBar.css';
 const links = [
+  {
+    title: 'Dashboard',
+    route: '/admin',
+    icon: 'fas fa-home mx-3',
+  },
   {
     title: 'Clients',
     route: '/admin/clientslist',
@@ -46,7 +52,7 @@ const AdminDashboard = (props) => {
               component={ClientsListScreen}
               exact
             />
-            <Route path='/admin' component={ClientsListScreen} exact />
+            <Route path='/admin' component={AnalyticsScreen} exact />
             <Route
               path='/admin/clientslist/:pageNumber'
               component={ClientsListScreen}

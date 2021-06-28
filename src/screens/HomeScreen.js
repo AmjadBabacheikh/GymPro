@@ -32,18 +32,19 @@ const HomeScreen = ({ history }) => {
       <Row>
         <Col>
           <div className='text-center py-4'>
-            <h4 className='homeh4'>
-              <h3>
-                <strong
-                  style={{
-                    fontSize: 30,
-                    fontWeight: 'bold',
-                  }}
-                >
-                  SALLE DE SPORT HAUT DE GAMME
-                </strong>
-              </h3>
-              MUSCULATION, CARDIO, CROSS-TRAINING & BOXE EN ACCÈS ILLIMITÉ
+            <h3 className='homeh4'>
+              <strong
+                style={{
+                  fontSize: 30,
+                  fontWeight: 'bold',
+                }}
+              >
+                TOP OF THE RANGE SPORTS HALL
+              </strong>
+            </h3>
+            <h4>
+              BODYBUILDING, CARDIO, CROSS-TRAINING & BOXING WITH UNLIMITED
+              ACCESS
             </h4>
           </div>
         </Col>

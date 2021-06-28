@@ -13,18 +13,16 @@ const Footer = () => {
               <h1 className='px-2'>GymPro</h1>
             </Row>
             <Row>
-              <p className='py-4 px-2'>
-                GymPro a développé une expertise technique et opérationnelle qui
-                le positionne en acteur incontournable du marché marocain avec
-                la gamme la plus complète de produits longs, conformes aux
-                exigences des normes nationales du secteur.
+              <p className='py-4 px-3'>
+                Our goal is to support you to achieve your sporting goals, and
+                to help you surpass yourself.
               </p>
             </Row>
           </Col>
           <Col md={12} lg={4}>
             <ul>
               <li className='py-0.5'>
-                <h5> Adresse</h5>
+                <h5>Address</h5>
                 <p>23 AL FARAH,20070</p>
                 <p>CASABLANCA-MAROC</p>
               </li>
@@ -33,25 +31,25 @@ const Footer = () => {
                 <p>contact@gympro.com</p>
               </li>
               <li className='py-0.5'>
-                <h5>Service clientele</h5>
+                <h5>Customer service</h5>
                 <p>+212689432312 /+3376490293</p>
               </li>
             </ul>
           </Col>
           <Col md={12} lg={4}>
-            <h4>Plan du site</h4>
+            <h4>Useful links</h4>
             <ul>
               <li className='py-2'>
                 <Link to='/'>Home</Link>
               </li>
               <li className='py-2'>
-                <Link to='/pricing'>Pricing</Link>
+                <Link to='/classes'>Classes</Link>
               </li>
               <li className='py-2'>
-                <Link to='/about'>A propos</Link>
+                <Link to='/about'>About</Link>
               </li>
             </ul>
-            <h4>Suivez-nous</h4>
+            <h4>Follow us</h4>
             <ul>
               <li>
                 <i className='fab fa-facebook fa-lg  py-3'></i>

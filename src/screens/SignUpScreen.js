@@ -52,7 +52,7 @@ const SignUpScreen = ({ history }) => {
   return (
     <FormContainer className='align-middle'>
       <h1 className='my-4 text-center' style={{ color: ' #ee6f57' }}>
-        Inscription
+        Sign Up
       </h1>
       {Loading && <Loader />}
       {error && <Message variant='danger'>{error}</Message>}
@@ -186,12 +186,12 @@ const SignUpScreen = ({ history }) => {
             className='btnLogin my-3 px-4'
             block
           >
-            Inscription
+            Register
           </Button>
         </div>
       </Form>
       <Row className='py-3'>
-        Deja inscrit ?
+        Have an Account? ?
         <Link
           to='/signin'
           style={{
@@ -200,7 +200,7 @@ const SignUpScreen = ({ history }) => {
             color: '#005691',
           }}
         >
-          Connectez-vous
+          Login
         </Link>
       </Row>
     </FormContainer>

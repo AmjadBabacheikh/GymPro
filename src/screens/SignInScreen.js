@@ -35,7 +35,7 @@ const SignInScreen = ({ history }) => {
     >
       <FormContainer>
         <h1 className='py-2 text-center' style={{ color: ' #ee6f57' }}>
-          S'identifier
+          Sign In
         </h1>
         {Loading ? (
           <Loader />
@@ -72,12 +72,12 @@ const SignInScreen = ({ history }) => {
               className='btnLogin my-3 px-4'
               block
             >
-              S'identifier
+              Sign In
             </Button>
           </div>
         </Form>
         <Row className='py-3'>
-          Premiere visite sur notre site ?
+          New Customer? ?
           <Link
             to='/register'
             style={{
@@ -86,7 +86,7 @@ const SignInScreen = ({ history }) => {
               color: '#005691',
             }}
           >
-            Inscrivez-vous
+            Register
           </Link>
         </Row>
       </FormContainer>

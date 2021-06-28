@@ -19,6 +19,7 @@ import AdminDashboard from './screens/AdminDashboard';
 import OrderScreen from './screens/OrderScreen';
 import FacturesClientsScreen from './screens/FacturesClientsScreen';
 import ClassesScreen from './screens/ClassesScreen';
+import ChatScreen from './screens/ChatScreen';
 import './App.css';
 const App = () => {
   return (
@@ -56,7 +57,13 @@ const App = () => {
             component={FacturesClientsScreen}
             exact
           />
+          <Route
+            path='/client/factures/:pageNumber'
+            component={FacturesClientsScreen}
+            exact
+          />
           <Route path='/classes' component={ClassesScreen} exact />
+          <Route path='/employe/chat' component={ChatScreen} exact />
         </Switch>
       </main>
       <Footer />

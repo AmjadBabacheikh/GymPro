@@ -66,7 +66,7 @@ const CartScreen = ({ match, location, history }) => {
       {error && <Message variant='info'>{error}</Message>}
       {Loading && <Loader />}
 
-      {!isEmpty(cart) ? (
+      {!isEmpty(cart) && cart.achatDetails?.length !== 0 ? (
         <Row>
           <Col md={8}>
             <ListGroup variant='flush'>
@@ -141,38 +141,12 @@ const CartScreen = ({ match, location, history }) => {
                     Checkout
                   </Button>
                 </ListGroup.Item>
-                <ListGroup.Item>
-                  <Form>
-                    <Row>
-                      <Col md={9}>
-                        <Form.Group controlId='coupon'>
-                          <Form.Control
-                            type='text'
-                            placeholder='Entrer coupon'
-                            value={coupon}
-                            onChange={(e) => {
-                              setCoupon(e.target.value);
-                            }}
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col>
-                        <Button
-                          type='button'
-                          // className='btn-sm'
-                          disabled={cart.achatDetails.length === 0}
-                          onClick={checkCouponHandler}
-                        >
-                          Apply
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Form>
-                </ListGroup.Item>
               </ListGroup>
             </Card>
           </Col>
         </Row>
+      ) : !isEmpty(cart) && cart.achatDetails?.length === 0 ? (
+        <Message variant='info'>votre panier est vide</Message>
       ) : (
         <h1></h1>
       )}

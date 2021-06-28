@@ -88,6 +88,14 @@ import {
   LIST_SEANCES_REQUEST,
   LIST_SEANCES_SUCCESS,
   LIST_SEANCES_FAIL,
+  CHECK_COUPON_REQUEST,
+  CHECK_COUPON_SUCCESS,
+  CHECK_COUPON_FAIL,
+  CHECK_COUPON_RESET,
+  GET_ANALYTICS_REQUEST,
+  GET_ANALYTICS_SUCCESS,
+  GET_ANALYTICS_FAIL,
+  REGLER_ACHAT_RESET,
 } from '../constants/userConstants';
 
 export const loginReducer = (state = {}, action) => {
@@ -443,6 +451,8 @@ export const achatRegleReducer = (state = {}, action) => {
       return { Loading: false, successPay: true };
     case REGLER_ACHAT_FAIL:
       return { Loading: false, errorPay: payload };
+    case REGLER_ACHAT_RESET:
+      return {};
     default:
       return state;
   }
@@ -505,7 +515,7 @@ export const detailFactureAdminReducer = (state = { facture: {} }, action) => {
         Loading: false,
         facture: payload,
       };
-    case LIST_FACTURES_ADMIN_FAIL:
+    case FACTURE_DETAIL_ADMIN_FAIL:
       return { Loading: false, error: payload };
     default:
       return state;
@@ -523,6 +533,42 @@ export const listSeancesReducer = (state = { seances: [] }, action) => {
         seances: payload,
       };
     case LIST_SEANCES_FAIL:
+      return { Loading: false, error: payload };
+    default:
+      return state;
+  }
+};
+
+export const couponCheckReducer = (state = { coupon: {} }, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case CHECK_COUPON_REQUEST:
+      return { Loading: true };
+    case CHECK_COUPON_SUCCESS:
+      return {
+        Loading: false,
+        coupon: payload,
+      };
+    case CHECK_COUPON_FAIL:
+      return { Loading: false, error: payload };
+    case CHECK_COUPON_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const anlyticsAdminReducer = (state = { analytics: {} }, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case GET_ANALYTICS_REQUEST:
+      return { Loading: true };
+    case GET_ANALYTICS_SUCCESS:
+      return {
+        Loading: false,
+        analytics: payload,
+      };
+    case GET_ANALYTICS_FAIL:
       return { Loading: false, error: payload };
     default:
       return state;

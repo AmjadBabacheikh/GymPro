@@ -48,7 +48,7 @@ const ServicesCarousel = () => {
                     {item.service.prix} DH
                   </span>{' '}
                   <br />
-                  <span className='px-1'> {item.service.duree} Mois</span>
+                  <span className='px-1'> {item.service.duree} Months</span>
                 </h2>
               </Carousel.Caption>
             </Link>

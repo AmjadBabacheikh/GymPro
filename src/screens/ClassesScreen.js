@@ -65,8 +65,8 @@ const ClassesScreen = ({ history }) => {
               <Col md={3} xs={12} style={{ float: 'right' }}>
                 <h5 className='title'>CATEGORIES</h5>
                 <ul>
-                  {cours.map((item) => (
-                    <li>{item.cours.nomCours}</li>
+                  {cours.map((item, index) => (
+                    <li key={index}>{item.cours.nomCours}</li>
                   ))}
                 </ul>
               </Col>
@@ -84,25 +84,25 @@ const ClassesScreen = ({ history }) => {
                 <thead>
                   <tr>
                     <th></th>
-                    <th>Lundi</th>
-                    <th>Mardi</th>
-                    <th>Mercredi</th>
-                    <th>Jeudi</th>
-                    <th>Vendredi</th>
-                    <th>Samedi</th>
-                    <th>Dimanche</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                    <th>Sunday</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>8.00am - 10.00am</td>
-                    <td>{getCours(8, 12, 'lundi')}</td>
-                    <td>{getCours(8, 12, 'mardi')}</td>
-                    <td>{getCours(8, 12, 'mercredi')}</td>
-                    <td>{getCours(8, 12, 'jeudi')}</td>
-                    <td>{getCours(8, 12, 'vendredi')}</td>
-                    <td>{getCours(8, 12, 'samedi')}</td>
-                    <td>{getCours(8, 12, 'dimanche')}</td>
+                    <td>{getCours(8, 10, 'lundi')}</td>
+                    <td>{getCours(8, 10, 'mardi')}</td>
+                    <td>{getCours(8, 10, 'mercredi')}</td>
+                    <td>{getCours(8, 10, 'jeudi')}</td>
+                    <td>{getCours(8, 10, 'vendredi')}</td>
+                    <td>{getCours(8, 10, 'samedi')}</td>
+                    <td>{getCours(8, 10, 'dimanche')}</td>
                   </tr>
                   <tr>
                     <td>10.00am - 12.00am</td>

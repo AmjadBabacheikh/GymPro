@@ -80,6 +80,12 @@ import {
   LIST_SEANCES_REQUEST,
   LIST_SEANCES_SUCCESS,
   LIST_SEANCES_FAIL,
+  CHECK_COUPON_REQUEST,
+  CHECK_COUPON_SUCCESS,
+  CHECK_COUPON_FAIL,
+  GET_ANALYTICS_REQUEST,
+  GET_ANALYTICS_SUCCESS,
+  GET_ANALYTICS_FAIL,
 } from '../constants/userConstants';
 
 export const login = (email, password) => async (dispatch) => {
@@ -781,7 +787,7 @@ export const getClientFacture = (pageNo) => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.get(
-      `/api/client/factures?pageNo=${pageNo}&pageSize=${2}`,
+      `/api/client/factures?pageNo=${pageNo}&pageSize=${3}`,
       config
     );
     dispatch({ type: LIST_FACTURES_SUCCESS, payload: data });
@@ -863,6 +869,64 @@ export const getSeances = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: LIST_SEANCES_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const checkCoupon = (reference) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: CHECK_COUPON_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    const { data } = await axios.get(
+      `/api/client/coupons`,
+      { reference: reference },
+      config
+    );
+    dispatch({ type: CHECK_COUPON_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: CHECK_COUPON_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getAnalyticsAdmin = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: GET_ANALYTICS_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    const { data } = await axios.get(`/api/admin/analytics`, config);
+    dispatch({ type: GET_ANALYTICS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: GET_ANALYTICS_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

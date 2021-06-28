@@ -37,7 +37,7 @@ const CoursesScreen = () => {
             <h3>PUSH YOUR LIMITS FORWARD</h3>
             <Row>
               {cours.map((item, index) => (
-                <Col xs={12} md={6} lg={4} xl={3}>
+                <Col key={index} xs={12} md={6} lg={4} xl={3}>
                   <Card
                     style={{
                       width: '16rem',
@@ -53,8 +53,8 @@ const CoursesScreen = () => {
                         height: '250px',
                         width: '100%',
                       }}
-                      rounded
-                      fluid
+                      // rounded
+                      // fluid
                     />
                     <Card.Body>
                       <Card.Title

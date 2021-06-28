@@ -2,21 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { PayPalButton } from 'react-paypal-button-v2';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { ListGroup, Row, Col, Image, Button, Container } from 'react-bootstrap';
+import {
+  ListGroup,
+  Row,
+  Col,
+  Image,
+  Button,
+  Container,
+  Form,
+} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { getCart, reglerAchat } from '../actions/userActions';
+import { getCart, reglerAchat, checkCoupon } from '../actions/userActions';
+import {
+  CHECK_COUPON_RESET,
+  REGLER_ACHAT_RESET,
+} from '../constants/userConstants';
 import Message from '../components/Loader';
 import Loader from '../components/Loader';
 import { base64StringToBlob } from 'blob-util';
 
-const OrderScreen = ({ match }) => {
+const OrderScreen = ({ match, history }) => {
   const [isSdk, setSdk] = useState(false);
   const dispatch = useDispatch();
+  const [theCoupon, setCoupon] = useState('');
   const userCart = useSelector((state) => state.userCart);
   const userLogin = useSelector((state) => state.userLogin);
+  const couponCheck = useSelector((state) => state.couponCheck);
+  const { Loading: LoadingCoupon, coupon, error: errorCoupon } = couponCheck;
   const { userInfo } = userLogin;
   const achatRegle = useSelector((state) => state.achatRegle);
-  const { Loading: LoadingPay, successPay, errorPay } = achatRegle;
+  const { successPay, errorPay, LoadingPay } = achatRegle;
   const { Loading, cart, error } = userCart;
 
   const isEmpty = function (obj) {
@@ -37,8 +52,11 @@ const OrderScreen = ({ match }) => {
       };
       document.body.appendChild(script);
     };
-    if (isEmpty(cart) || successPay) {
+    if (isEmpty(cart)) {
       dispatch(getCart());
+    } else if (successPay) {
+      dispatch({ type: REGLER_ACHAT_RESET });
+      history.push('/client/factures');
     } else {
       if (!window.paypal) {
         addPaypalScript();
@@ -46,7 +64,27 @@ const OrderScreen = ({ match }) => {
         setSdk(true);
       }
     }
-  }, [dispatch]);
+  }, [dispatch, successPay]);
+  const checkCouponHandler = async (e) => {
+    console.log(theCoupon);
+    e.preventDefault();
+    dispatch(checkCoupon(theCoupon));
+    // try {
+    //   const { data } = await axios.get(
+    //     `/api/client/coupons`,
+    //     { reference: theCoupon },
+    //     {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         Authorization: `${userInfo.jwt}`,
+    //       },
+    //     }
+    //   );
+    //   console.log(data);
+    // } catch (err) {
+    //   console.log(err.message);
+    // }
+  };
   const successPaymentHandler = () => {
     dispatch(reglerAchat());
   };
@@ -58,9 +96,11 @@ const OrderScreen = ({ match }) => {
   };
   return (
     <Container>
-      {error && <Message variant='info'>{error}</Message>}
-      {Loading && <Loader />}
-      {!isEmpty(cart) ? (
+      {Loading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant='danger'>{error}</Message>
+      ) : !isEmpty(cart) ? (
         <Container>
           <Row>
             <Col md={8}>
@@ -72,13 +112,16 @@ const OrderScreen = ({ match }) => {
                     {userInfo.user.profil.prenom}
                   </h6>
                   <h6>Email : {userInfo.user.email}</h6>
+                  {/* {successPay && (
+                    <Message variant='success'>Paid successfully</Message>
+                  )} */}
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  {cart.achatDetails.length === 0 ? (
+                  {cart?.achatDetails?.length === 0 ? (
                     <Message variant='info'>Your cart is empty </Message>
                   ) : (
                     <ListGroup variant='flush'>
-                      {cart.achatDetails.map((item, index) => (
+                      {cart?.achatDetails?.map((item, index) => (
                         <ListGroup.Item key={index}>
                           <Row>
                             <Col md={3}>
@@ -120,7 +163,7 @@ const OrderScreen = ({ match }) => {
                   <Row>
                     <Col>Items</Col>
                     <Col>
-                      {cart.achatDetails
+                      {cart?.achatDetails
                         .reduce((acc, item) => acc + item.qte, 0)
                         .toFixed(0)}
                     </Col>
@@ -130,7 +173,7 @@ const OrderScreen = ({ match }) => {
                   <Row>
                     <Col>Total</Col>
                     <Col>
-                      {cart.achatDetails
+                      {cart?.achatDetails
                         .reduce(
                           (acc, item) =>
                             acc + item.service.service.prix * item.qte,
@@ -142,14 +185,52 @@ const OrderScreen = ({ match }) => {
                     </Col>
                   </Row>
                 </ListGroup.Item>
-                {/* {!order.isPaid && ( */}
+                <ListGroup.Item>
+                  <Form>
+                    <Row>
+                      <Col md={9}>
+                        <Form.Group controlId='coupon'>
+                          <Form.Control
+                            type='text'
+                            placeholder='Entrer coupon'
+                            value={theCoupon}
+                            onChange={(e) => {
+                              setCoupon(e.target.value);
+                            }}
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Button
+                          type='button'
+                          // className='btn-sm'
+                          disabled={cart?.achatDetails?.length === 0}
+                          onClick={checkCouponHandler}
+                        >
+                          Apply
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                  <Row>
+                    {/* {
+                      LoadingCoupon ? (
+                      <Loader />
+                    ) : errorCoupon ? (
+                      <Message variant='danger'>{errorCoupon}</Message>
+                    ) : 
+                    ( */}
+                    <p>{errorCoupon}</p>
+                    {/* )} */}
+                  </Row>
+                </ListGroup.Item>
                 <ListGroup.Item>
                   {LoadingPay && <Loader />}
                   {!isSdk ? (
                     <Loader />
                   ) : (
                     <PayPalButton
-                      amount={cart.achatDetails
+                      amount={cart?.achatDetails
                         .reduce(
                           (acc, item) =>
                             acc + item.service.service.prix * item.qte,
@@ -165,7 +246,7 @@ const OrderScreen = ({ match }) => {
           </Row>
         </Container>
       ) : (
-        <h1> </h1>
+        <h1></h1>
       )}
     </Container>
   );

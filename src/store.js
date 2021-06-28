@@ -27,6 +27,8 @@ import {
   clientsListFacturesAdminReducer,
   detailFactureAdminReducer,
   listSeancesReducer,
+  couponCheckReducer,
+  anlyticsAdminReducer,
 } from './reducers/userReducers';
 import {
   coursListReducer,
@@ -80,6 +82,8 @@ const reducer = combineReducers({
   coachsListRespo: coachsListRespoReducer,
   seanceAdd: seanceAddReducer,
   listSeances: listSeancesReducer,
+  couponCheck: couponCheckReducer,
+  anlyticsAdmin: anlyticsAdminReducer,
 });
 const initialState = {
   userLogin: {
