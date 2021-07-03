@@ -7,6 +7,8 @@ import AddClientScreen from './AddClientScreen';
 import AddCourseScreen from './AddCourseScreen';
 import CouponsListScreen from './CouponsListScreen';
 import AddSeanceScreen from './AddSeanceScreen';
+import SeancesListSceen from './SeancesListSceen';
+import UpdateSeanceScreen from './UpdateSeanceScreen';
 import '../components/SideBar.css';
 const links = [
   {
@@ -28,6 +30,10 @@ const links = [
   {
     title: 'Creer Seance',
     route: '/responsable/seance',
+  },
+  {
+    title: 'List Seances',
+    route: '/responsable/seances',
   },
 ];
 const ResponableDashboard = (props) => {
@@ -68,6 +74,21 @@ const ResponableDashboard = (props) => {
             <Route
               path='/responsable/seance'
               component={AddSeanceScreen}
+              exact
+            />
+            <Route
+              path='/responsable/seances'
+              component={SeancesListSceen}
+              exact
+            />
+            <Route
+              path='/responsable/seances/:pageNumber'
+              component={SeancesListSceen}
+              exact
+            />
+            <Route
+              path='/responsable/seance/:id'
+              component={UpdateSeanceScreen}
               exact
             />
           </Switch>

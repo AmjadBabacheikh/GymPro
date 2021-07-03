@@ -90,7 +90,7 @@ const OrderScreen = ({ match, history }) => {
     // }
   };
   const successPaymentHandler = () => {
-    dispatch(reglerAchat());
+    dispatch(reglerAchat(coupon.id));
   };
   const convertToImage = (response) => {
     var contentType = 'image/png';

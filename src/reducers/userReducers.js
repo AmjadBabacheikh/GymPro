@@ -96,6 +96,12 @@ import {
   GET_ANALYTICS_SUCCESS,
   GET_ANALYTICS_FAIL,
   REGLER_ACHAT_RESET,
+  GET_FACTURE_PDF_REQUEST,
+  GET_FACTURE_PDF_SUCCESS,
+  GET_FACTURE_PDF_FAIL,
+  GET_SEANCES_REQUEST,
+  GET_SEANCES_SUCCESS,
+  GET_SEANCES_FAIL,
 } from '../constants/userConstants';
 
 export const loginReducer = (state = {}, action) => {
@@ -530,7 +536,10 @@ export const listSeancesReducer = (state = { seances: [] }, action) => {
     case LIST_SEANCES_SUCCESS:
       return {
         Loading: false,
-        seances: payload,
+        seances: payload.content,
+        itemsCountPerPage: payload.size,
+        totalPages: payload.totalPages,
+        totalElements: payload.totalElements,
       };
     case LIST_SEANCES_FAIL:
       return { Loading: false, error: payload };
@@ -569,6 +578,37 @@ export const anlyticsAdminReducer = (state = { analytics: {} }, action) => {
         analytics: payload,
       };
     case GET_ANALYTICS_FAIL:
+      return { Loading: false, error: payload };
+    default:
+      return state;
+  }
+};
+
+export const clientFactureReducer = (state = {}, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case GET_FACTURE_PDF_REQUEST:
+      return { Loading: true };
+    case GET_FACTURE_PDF_SUCCESS:
+      return { Loading: false, facture: payload };
+    case GET_FACTURE_PDF_FAIL:
+      return { Loading: false, error: payload };
+    default:
+      return state;
+  }
+};
+
+export const listSeancesUserReducer = (state = { seances: [] }, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case GET_SEANCES_REQUEST:
+      return { Loading: true };
+    case GET_SEANCES_SUCCESS:
+      return {
+        Loading: false,
+        seances: payload.content,
+      };
+    case GET_SEANCES_FAIL:
       return { Loading: false, error: payload };
     default:
       return state;

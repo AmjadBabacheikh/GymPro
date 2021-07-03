@@ -17,6 +17,15 @@ import {
   ADD_SEANCE_REQUEST,
   ADD_SEANCE_SUCCESS,
   ADD_SEANCE_FAIL,
+  DELETE_SEANCE_REQUEST,
+  DELETE_SEANCE_SUCCESS,
+  DELETE_SEANCE_FAIL,
+  UPDATE_SEANCE_REQUEST,
+  UPDATE_SEANCE_SUCCESS,
+  UPDATE_SEANCE_FAIL,
+  GET_SEANCE_REQUEST,
+  GET_SEANCE_SUCCESS,
+  GET_SEANCE_FAIL,
 } from '../constants/responsableConstants';
 export const addAbonnement =
   (prix, description, durée, img) => async (dispatch, getState) => {
@@ -185,3 +194,84 @@ export const addSeance =
       });
     }
   };
+
+export const deleteSeance = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: DELETE_SEANCE_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    await axios.delete(`/api/responsable/seances/${id}`, config);
+    dispatch({ type: DELETE_SEANCE_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: DELETE_SEANCE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updateSeance = (seance) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: UPDATE_SEANCE_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    await axios.put(`/api/responsable/seances`, { seance }, config);
+    dispatch({ type: UPDATE_SEANCE_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_SEANCE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getSeance = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: GET_SEANCE_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+    };
+    const { data } = await axios.get(`/api/user/seances/${id}`, config);
+    dispatch({ type: GET_SEANCE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: GET_SEANCE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};

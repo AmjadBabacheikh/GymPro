@@ -166,11 +166,11 @@ const AnalyticsScreen = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {clients.map((user) => (
+                    {analytics?.last5Clients?.map((user) => (
                       <tr key={user.id}>
                         <td>{user.id}</td>
-                        <td>{user.profil.cin}</td>
-                        <td>{`${user.profil.prenom} ${user.profil.nom}`}</td>
+                        <td>{user.cin}</td>
+                        <td>{user.name}</td>
                         <td>{user.email}</td>
                       </tr>
                     ))}

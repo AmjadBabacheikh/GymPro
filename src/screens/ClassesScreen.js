@@ -9,7 +9,7 @@ import {
   ListGroup,
   Table,
 } from 'react-bootstrap';
-import { getSeances } from '../actions/userActions';
+import { getAllSeances } from '../actions/userActions';
 import './CoursesScreen.css';
 import img from '../images/class-details.jpg';
 import Loader from '../components/Loader';
@@ -17,13 +17,13 @@ import Message from '../components/Message';
 
 const ClassesScreen = ({ history }) => {
   const dispatch = useDispatch();
-  const listSeances = useSelector((state) => state.listSeances);
-  const { Loading, seances, error } = listSeances;
+  const listSeancesUser = useSelector((state) => state.listSeancesUser);
+  const { Loading, seances, error } = listSeancesUser;
   const coursList = useSelector((state) => state.coursList);
   const { Loading: LoadingCours, cours, error: errorCours } = coursList;
   useEffect(() => {
-    dispatch(getSeances());
-  }, []);
+    dispatch(getAllSeances());
+  }, [dispatch]);
 
   const getCours = (heureDebut, heureFin, nomJour) => {
     const existedSeance = seances.find(
@@ -33,7 +33,9 @@ const ClassesScreen = ({ history }) => {
         seance.jour.nomJour === nomJour
     );
     if (existedSeance) {
-      return existedSeance.cours.nomCours;
+      return (
+        existedSeance.cours.nomCours + ' / ' + existedSeance.coach.profil.nom
+      );
     } else {
       return '';
     }

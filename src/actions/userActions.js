@@ -86,6 +86,12 @@ import {
   GET_ANALYTICS_REQUEST,
   GET_ANALYTICS_SUCCESS,
   GET_ANALYTICS_FAIL,
+  GET_FACTURE_PDF_REQUEST,
+  GET_FACTURE_PDF_SUCCESS,
+  GET_FACTURE_PDF_FAIL,
+  GET_SEANCES_REQUEST,
+  GET_SEANCES_SUCCESS,
+  GET_SEANCES_FAIL,
 } from '../constants/userConstants';
 
 export const login = (email, password) => async (dispatch) => {
@@ -719,7 +725,7 @@ export const getCart = () => async (dispatch, getState) => {
     });
   }
 };
-export const reglerAchat = () => async (dispatch, getState) => {
+export const reglerAchat = (id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: REGLER_ACHAT_REQUEST,
@@ -733,7 +739,11 @@ export const reglerAchat = () => async (dispatch, getState) => {
         Authorization: `${userInfo.jwt}`,
       },
     };
-    const { data } = await axios.post(`/api/client/factures/`, null, config);
+    const { data } = await axios.post(
+      `/api/client/factures/${id}`,
+      null,
+      config
+    );
     dispatch({ type: REGLER_ACHAT_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -859,12 +869,14 @@ export const getFactureDetailAdmin = (id) => async (dispatch, getState) => {
   }
 };
 
-export const getSeances = () => async (dispatch, getState) => {
+export const getSeances = (pageNo) => async (dispatch, getState) => {
   try {
     dispatch({
       type: LIST_SEANCES_REQUEST,
     });
-    const { data } = await axios.get(`/api/seances`);
+    const { data } = await axios.get(
+      `/api/seances?pageNo=${pageNo}&pageSize=${1}`
+    );
     dispatch({ type: LIST_SEANCES_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -923,6 +935,56 @@ export const getAnalyticsAdmin = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: GET_ANALYTICS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getFacturePdfClient = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: GET_FACTURE_PDF_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${userInfo.jwt}`,
+      },
+      responseType: 'arraybuffer',
+    };
+    const response = await axios.get(`/api/client/factures/${id}/pdf`, config);
+    let blob = new Blob([response.data], {
+      type: response.headers['content-type'],
+    });
+    let cv = URL.createObjectURL(blob);
+    dispatch({ type: GET_FACTURE_PDF_SUCCESS, payload: cv });
+  } catch (error) {
+    dispatch({
+      type: GET_FACTURE_PDF_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getAllSeances = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: GET_SEANCES_REQUEST,
+    });
+    const { data } = await axios.get(`/api/seances`);
+    dispatch({ type: GET_SEANCES_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: GET_SEANCES_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -8,6 +8,8 @@ import {
   Button,
   Form,
   Modal,
+  Card,
+  ListGroup,
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { getFactureDetailAdmin } from '../actions/userActions';
@@ -43,45 +45,42 @@ const DetailFactureAdminScreen = ({ history, match }) => {
   //   };
   return (
     <Container>
-      <Row>
-        <Col>
-          <h3 className='my-1 py-2'>Facture Detail N:{id} </h3>
-        </Col>
-      </Row>
       {Loading ? (
         <Loader />
       ) : error ? (
         <Message variant='danger'>{error}</Message>
       ) : (
-        <Table striped bordered hover className='sm' responsive>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>DATE</th>
-              <th>CLIENT</th>
-              <th>MONTANT</th>
-              <th>ITEMS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!isEmpty(facture.facture) && (
-              <tr key={facture.id}>
-                <td>{facture.id}</td>
-                <td>
-                  {!isEmpty(facture.facture) &&
-                    facture.facture.date.slice(0, 10) +
-                      '   ' +
-                      facture.facture.date.slice(11, 19)}
-                </td>
-                <td>
-                  {facture.client.profil.nom} {facture.client.profil.prenom}
-                </td>
-                <td>{facture.facture.montant}</td>
-                <td>{facture.services.length}</td>
-              </tr>
-            )}
-          </tbody>
-        </Table>
+        <Card style={{ width: '100%', marginTop: 10, paddingLeft: 10 }}>
+          <Card.Body>
+            <Row>
+              <Col>
+                <h3 style={{ float: 'left' }} className='my-1 py-2'>
+                  Detail Invoice N:{id}
+                </h3>
+              </Col>
+              <Col>
+                <h4 style={{ float: 'right' }} className='my-1 py-2'>
+                  {facture?.facture?.date.slice(0, 10)}
+                </h4>
+              </Col>
+            </Row>
+            <h4>
+              Customer :{' '}
+              {facture?.client?.profil?.nom +
+                ' ' +
+                facture?.client?.profil?.prenom}
+            </h4>
+            <h5 className='my-3'>Products:</h5>
+            <ListGroup>
+              {facture?.services?.map((service) => (
+                <ListGroup.Item style={{ color: '#EE6F57' }} key={service?.id}>
+                  {service?.description + ' / ' + service?.prix + ' DH'}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+            <h5 className='my-3'>Total : {facture?.facture?.montant} DH</h5>
+          </Card.Body>
+        </Card>
       )}
     </Container>
   );

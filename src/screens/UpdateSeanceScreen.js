@@ -3,52 +3,75 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Form, Row, Col, Button, ListGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Loader from '../components/Loader';
-import { getCoachsRespo, addSeance } from '../actions/reponsableActions';
+import {
+  getCoachsRespo,
+  updateSeance,
+  getSeance,
+} from '../actions/reponsableActions';
 import { getListCours } from '../actions/coursActions';
+import { getSeances } from '../actions/userActions';
 import Message from '../components/Message';
 import FormContainer from '../components/FormContainer';
+import { GET_SEANCE_RESET } from '../constants/responsableConstants';
 import './SignUpScreen.css';
 
-const AddSeanceScreen = ({ history }) => {
+const UpdateSeanceScreen = ({ history, match }) => {
   const dispatch = useDispatch();
-  const [heureDebut, setHeureDebut] = useState('');
-  const [heureFin, setHeureFin] = useState('');
-  const [idCoach, setCoach] = useState('');
-  const [idCours, setCours] = useState('');
-  const [idJour, setJour] = useState('');
+  const idSeance = match.params.id;
+  const [heureDebut, setHeureDebut] = useState(null);
+  const [heureFin, setHeureFin] = useState(null);
+  const [idCoach, setCoach] = useState(null);
+  const [idCours, setCours] = useState(null);
+  const [idJour, setJour] = useState(null);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const coachsListRespo = useSelector((state) => state.coachsListRespo);
   const { Loading, coachs, error } = coachsListRespo;
   const coursList = useSelector((state) => state.coursList);
   const { Loading: LoadingCours, cours } = coursList;
-  const seanceAdd = useSelector((state) => state.seanceAdd);
-  const { Loading: LoadingAdd, successAdd, errorAdd } = seanceAdd;
-
-  useEffect(() => {
-    if (userInfo) {
-      dispatch(getCoachsRespo());
-      dispatch(getListCours());
-    } else {
-      history('/');
+  const seanceDetail = useSelector((state) => state.seanceDetail);
+  const seanceUpdate = useSelector((state) => state.seanceUpdate);
+  const { success, error: errorUpdate } = seanceUpdate;
+  const { Loading: LoadingSeance, seance, error: errorSeance } = seanceDetail;
+  const isEmpty = function (obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
     }
-  }, [history, userInfo]);
+    return true;
+  };
+  useEffect(() => {
+    dispatch(getSeance(idSeance));
+    if (success) {
+      dispatch({ type: GET_SEANCE_RESET });
+      history.push('/responsable/seances');
+    }
+  }, [dispatch, history, success]);
+  useEffect(() => {
+    dispatch(getCoachsRespo());
+    dispatch(getListCours());
+  }, [dispatch]);
 
   const handleAdd = (e) => {
     e.preventDefault();
-    // console.log({ heureDebut, heureFin, idCours, idJour, idCoach });
-    dispatch(addSeance(heureDebut, heureFin, idCours, idJour, idCoach));
+    const updatedSeance = {
+      id: parseInt(idSeance),
+      heureDebut: heureDebut || seance?.heureDebut,
+      heureFin: heureFin || seance?.heureFin,
+      cours: { id: idCours || seance?.cours?.id },
+      jour: { id: idJour || seance?.jour?.id },
+      coach: { id: idCoach || seance?.jour?.id },
+    };
+    dispatch(updateSeance(seance));
+    console.log(updatedSeance);
   };
   return (
     <FormContainer className='align-middle'>
       <h1 className='my-4 text-center' style={{ color: ' #ee6f57' }}>
-        Add Seance
+        Update Seance
       </h1>
 
-      {errorAdd && <Message variant='danger'>{errorAdd}</Message>}
-      {successAdd && (
-        <Message variant='success'>Course ajoute avec succes</Message>
-      )}
+      {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
+
       {Loading || LoadingCours ? (
         <Loader />
       ) : (
@@ -60,7 +83,7 @@ const AddSeanceScreen = ({ history }) => {
                 <Form.Control
                   as='select'
                   custom
-                  defaultValue='1'
+                  defaultValue={seance?.heureDebut || '1'}
                   onChange={(e) => setHeureDebut(e.target.value)}
                 >
                   <option value='1'>Start</option>
@@ -77,7 +100,7 @@ const AddSeanceScreen = ({ history }) => {
                 <Form.Control
                   as='select'
                   custom
-                  defaultValue='1'
+                  defaultValue={seance?.heureFin || '1'}
                   onChange={(e) => setHeureFin(e.target.value)}
                 >
                   <option value='1'>End</option>
@@ -94,7 +117,7 @@ const AddSeanceScreen = ({ history }) => {
                 <Form.Control
                   as='select'
                   custom
-                  defaultValue='8'
+                  defaultValue={seance?.jour?.id || '8'}
                   onChange={(e) => setJour(e.target.value)}
                 >
                   <option value='8'>Day</option>
@@ -114,7 +137,7 @@ const AddSeanceScreen = ({ history }) => {
             <Form.Control
               as='select'
               custom
-              defaultValue='0'
+              defaultValue={seance?.coach?.id || '0'}
               onChange={(e) => {
                 setCoach(e.target.value);
               }}
@@ -134,7 +157,7 @@ const AddSeanceScreen = ({ history }) => {
             <Form.Control
               as='select'
               custom
-              defaultValue='0'
+              defaultValue={seance?.cours?.id || '0'}
               onChange={(e) => {
                 setCours(e.target.value);
               }}
@@ -157,7 +180,7 @@ const AddSeanceScreen = ({ history }) => {
               className='btnLogin my-3 px-4'
               block
             >
-              Ajouter
+              update
             </Button>
           </div>
         </Form>
@@ -166,4 +189,4 @@ const AddSeanceScreen = ({ history }) => {
   );
 };
 
-export default AddSeanceScreen;
+export default UpdateSeanceScreen;

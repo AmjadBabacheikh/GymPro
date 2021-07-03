@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import Header from './components/Header';
@@ -21,11 +22,18 @@ import FacturesClientsScreen from './screens/FacturesClientsScreen';
 import ClassesScreen from './screens/ClassesScreen';
 import ChatScreen from './screens/ChatScreen';
 import AboutScreen from './screens/AboutScreen';
+import ClientFactureDetail from './screens/ClientFactureDetail';
+import Message from './components/Message';
 import './App.css';
 const App = () => {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
   return (
     <Router>
       <Header />
+      {userInfo?.user?.statusClient?.nomStatus === 'suspendu' && (
+        <Message varaint='info'>You are invited to subscribe</Message>
+      )}
       <main className='main-dark'>
         {/* <Container> */}
         <Switch>
@@ -61,6 +69,11 @@ const App = () => {
           <Route
             path='/client/factures/:pageNumber'
             component={FacturesClientsScreen}
+            exact
+          />
+          <Route
+            path='/client/facture/:id'
+            component={ClientFactureDetail}
             exact
           />
           <Route path='/classes' component={ClassesScreen} exact />

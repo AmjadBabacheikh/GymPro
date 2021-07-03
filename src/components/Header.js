@@ -13,6 +13,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { logout } from '../actions/userActions';
 import './Header.css';
 import logo from '../images/logo.png';
+import Message from '../components/Message';
 
 const Header = ({ history }) => {
   const dispatch = useDispatch();
@@ -90,9 +91,11 @@ const Header = ({ history }) => {
                     <LinkContainer to='/profile'>
                       <NavDropdown.Item>profile</NavDropdown.Item>
                     </LinkContainer>
-                    <LinkContainer to='/client/factures'>
-                      <NavDropdown.Item>factures</NavDropdown.Item>
-                    </LinkContainer>
+                    {userInfo && userInfo.user.role === 'client' ? (
+                      <LinkContainer to='/client/factures'>
+                        <NavDropdown.Item>factures</NavDropdown.Item>
+                      </LinkContainer>
+                    ) : null}
                     <Route
                       render={({ history }) => (
                         <NavDropdown.Item

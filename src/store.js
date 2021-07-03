@@ -29,6 +29,8 @@ import {
   listSeancesReducer,
   couponCheckReducer,
   anlyticsAdminReducer,
+  clientFactureReducer,
+  listSeancesUserReducer,
 } from './reducers/userReducers';
 import {
   coursListReducer,
@@ -42,6 +44,9 @@ import {
   couponsListReducer,
   coachsListRespoReducer,
   seanceAddReducer,
+  removeSeanceReducer,
+  seanceUpdateReducer,
+  seanceDetailReducer,
 } from './reducers/responsableReducer.js';
 
 const userLoginFromStorage = localStorage.getItem('userInfo')
@@ -84,6 +89,11 @@ const reducer = combineReducers({
   listSeances: listSeancesReducer,
   couponCheck: couponCheckReducer,
   anlyticsAdmin: anlyticsAdminReducer,
+  removeSeance: removeSeanceReducer,
+  seanceUpdate: seanceUpdateReducer,
+  seanceDetail: seanceDetailReducer,
+  clientFacture: clientFactureReducer,
+  listSeancesUser: listSeancesUserReducer,
 });
 const initialState = {
   userLogin: {

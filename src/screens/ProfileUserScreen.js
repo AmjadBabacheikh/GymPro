@@ -170,6 +170,19 @@ const ProfileUserScreen = ({ history }) => {
                   </Col>
                 </Row>
               </ListGroup.Item>
+
+              {userInfo?.user?.dateFinAbonnement && (
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Subscription end date </Col>
+                    <Col className='info'>
+                      <strong>
+                        {userInfo?.user?.dateFinAbonnement?.slice(0, 10)}
+                      </strong>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Col>
         </Row>
